@@ -19,8 +19,7 @@
   Sanityzing user input:
     Whenever you embed a string within foreign code, you must escape it, according to the rules of that language.
     For example, if you embed a string in some SQL targeting MySql, you must escape the string with MySql's function for this purpose (mysql_real_escape_string).
-    If you embed strings within HTML markup, you must escape it with htmlspecialchars.
-    This means that every single echo or print statement should use htmlspecialchars.
+    If you embed strings within HTML markup, you must escape it with htmlspecialchars. This means that every single echo or print statement should use htmlspecialchars.
     If you are going to embed strings (Such as arguments) to external commands, and call them with exec, then you must use escapeshellcmd and escapeshellarg.
 
   Use objects:
@@ -682,14 +681,14 @@ function listobjects($dbc)
 		
 			// Print the record:
 			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid={$row['objectid']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['objectid']}</td>\n";
-			print "<td>{$row['objectname']}</td>\n";
-			print "<td>" . substr( $row['objectdescription'], 0, 60 ) . "</td>\n";
-			print "<td>" . substr( $row['typename'], 0, 25 ) . "</td>\n";
-			print "<td>{$row['objecttimestamp']}\n";
+			print "<td>" . htmlspecialchars($row['objectid']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objectname']) . "</td>\n";
+			print "<td>" . htmlspecialchars(substr( $row['objectdescription'], 0, 60 )) . "</td>\n";
+			print "<td>" . htmlspecialchars(substr( $row['typename'], 0, 25 )) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objecttimestamp']) . "\n";
 			print "</td>\n";			
 			print "<td>\n";
-			print "<form action=\"index.php?command=editobject&objectid=" . $row['objectid'] . "\" method=\"post\">\n";
+			print "<form action=\"index.php?command=editobject&objectid=" . htmlspecialchars($row['objectid']) . "\" method=\"post\">\n";
 			print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
 			print "</form>\n";
 			print "</td>\n";			
@@ -809,15 +808,15 @@ function viewobject($dbc)
 			print "<th class=\"object\" colspan=\"3\">Object</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name : </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['objectname']) . "</td>\n";
+			print "<td class=\"object\">" . htmlspecialchars($row['objectname']) . "</td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description : </td>\n";
-			print "<td class=\"object\">" . nl2br(htmlentities($row['objectdescription'])) . "</td>\n";
+			print "<td class=\"object\">" . nl2br(htmlspecialchars($row['objectdescription'])) . "</td>\n";
 						print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Type :  </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['typename']) . "</td>\n";
+			print "<td class=\"object\">" . htmlspecialchars($row['typename']) . "</td>\n";
 			print "</tr>\n";
 			print "</table>\n";
 			// Show Properties:
@@ -829,7 +828,7 @@ function viewobject($dbc)
 				
 					while ( $row = mysql_fetch_array($result) ) {
 						print "<tr>\n";
-						print "<td class=\"properties\" width=\"120px\">" . htmlentities($row['propertyname']);
+						print "<td class=\"properties\" width=\"120px\">" . htmlspecialchars($row['propertyname']);
 						if ($row['objectpropertyshared']) {
 							print " &#42;";
 						}
@@ -860,8 +859,8 @@ function viewobject($dbc)
 
 					while ( $row = mysql_fetch_array($result) ) {
 						print "<tr>\n";
-						print "<td class=\"relations\" width=\"120px\"> ". htmlentities($row['relationname']);
-						print "<td class=\"relations\"> <a href=\"index.php?command=viewobject&objectid=" . $row['objectid1'] . "\">" . htmlentities($row['objectname1']) . "</a> " . htmlentities($row['relationdescription']) . " <a href=\"index.php?command=viewobject&objectid=" . $row['objectid2'] . "\">" . htmlentities($row['objectname2']) . "</a></td>\n";
+						print "<td class=\"relations\" width=\"120px\"> ". htmlspecialchars($row['relationname']);
+						print "<td class=\"relations\"> <a href=\"index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid1']) . "\">" . htmlspecialchars($row['objectname1']) . "</a> " . htmlspecialchars($row['relationdescription']) . " <a href=\"index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid2']) . "\">" . htmlspecialchars($row['objectname2']) . "</a></td>\n";
 						print "</tr>\n";
 					}
 					print "</table>\n";
@@ -958,7 +957,7 @@ function addobject($dbc)
 			print '<p><label>Type <select name="type">' . "\n";
 			while ($row = mysql_fetch_array($result)) {
 			print '<option';
-			print ' value ="' . $row['id'] . '">' . $row['name'] . '</option>' ."\n";
+			print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
 			} 
 		} else { // Couldn't get the information.
 			print '<p id="clickme" class="error">Could not retrieve the object because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
@@ -1047,7 +1046,7 @@ function addmobject($dbc)
 			print '<p><label>Type <select name="type">' . "\n";
 			while ($row = mysql_fetch_array($result)) {
 			print '<option';
-			print ' value ="' . $row['id'] . '">' . $row['name'] . '</option>' ."\n";
+			print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
 			} 
 		} else { // Couldn't get the information.
 			print '<p id="clickme" class="error">Could not retrieve the object because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
@@ -1135,14 +1134,14 @@ function editobject($dbc)
 			print "</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name :</td>\n";
-			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlentities($row['objectname']) . "\" /></td>";
+			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlspecialchars($row['objectname']) . "\" /></td>";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description :</td>\n";
 			// Check how many lines in the string and adjust the textarea accordingly
 			$lines=explode("\n",htmlentities($row['objectdescription']));
 			$rowcount = count($lines);
-			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlentities($row['objectdescription']) . "</textarea></td>\n";
+			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlspecialchars($row['objectdescription']) . "</textarea></td>\n";
 			print "</tr>\n";
 			// Define query for type
 			$query = "SELECT  id, name FROM type ORDER BY id ASC";
@@ -1155,7 +1154,7 @@ function editobject($dbc)
 				if ( $row['id'] == $typeid ) {
 					print ' selected="true"';
 			}
-				print ' value ="' . $row['id'] . '">' . $row['name'] . '</option>' ."\n";
+				print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
 				} 
 			} else { // Couldn't get the information.
 				print '<p id="clickme" class="error">Could not retrieve the object because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
@@ -1204,15 +1203,15 @@ function editobject($dbc)
 				if (!$row['objectpropertyshared']) {
 					print "<form style=\"float:right;\" action=\"index.php?command=deleteobjectproperty&objectpropertyid=" . $row['objectpropertyid'] . "&objectid=" . $_GET['objectid'] . "\" method=\"post\">";
 					print '<input type="hidden" name="objectid" value="' . $_GET['objectid'] . '" />';
-					print '<input type="hidden" name="propertytype" value="' . $row['propertytype'] . '" />';
-					print '<input type="hidden" name="objectpropertyid" value="' . htmlentities($row['objectpropertyid']) . '" />';
-					print '<input type="hidden" name="objectpropertyshared" value="' . htmlentities($row['objectpropertyshared']) . '" />';
+					print '<input type="hidden" name="propertytype" value="' . htmlspecialchars($row['propertytype']) . '" />';
+					print '<input type="hidden" name="objectpropertyid" value="' . htmlspecialchars($row['objectpropertyid']) . '" />';
+					print '<input type="hidden" name="objectpropertyshared" value="' . htmlspecialchars($row['objectpropertyshared']) . '" />';
 					print "<input style=\"float:left;\" class=\"delete\" type=\"submit\" name=\"submit\" value=\"Delete\" />";
 					print '</form>';
 				}
-				print "<form style=\"float:right;\" action=\"index.php?command=editobjectproperty&objectpropertyid=" . $row['objectpropertyid'] . "&objectid=" . $_GET['objectid'] . "\" method=\"post\">";
+				print "<form style=\"float:right;\" action=\"index.php?command=editobjectproperty&objectpropertyid=" . htmlspecialchars($row['objectpropertyid']) . "&objectid=" . $_GET['objectid'] . "\" method=\"post\">";
 				print '<input type="hidden" name="objectid" value="' . $_GET['objectid'] . '" />';
-				print '<input type="hidden" name="objectpropertyid" value="' . htmlentities($row['objectpropertyid']) . '" />';
+				print '<input type="hidden" name="objectpropertyid" value="' . htmlspecialchars($row['objectpropertyid']) . '" />';
 				print '<input class="save" type="submit" name="submit" value="Edit" />';
 				print '</form>';
 				print "</td>\n";
@@ -1235,7 +1234,7 @@ function editobject($dbc)
 				print '<select class="edit" name="relationid">' . "\n";
 				while ($row = mysql_fetch_array($result)) {
 				print '<option';
-				print ' value ="' . $row['id'] . '">' . $row['name'] . '</option>' ."\n";
+				print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
 				} 
 			} else { // Couldn't get the information.
 				print '<p id="clickme" class="error">Could not retrieve the relation because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
@@ -1269,13 +1268,13 @@ function editobject($dbc)
 				while ( $row = mysql_fetch_array($result) ) {
 					print "<tr>\n";
 					print "<td class=\"relations\" width=\"120px\">";
-					print htmlentities($row['relationname']);
+					print htmlspecialchars($row['relationname']);
 					print "</td>\n";
 					print "<td class=\"relations\">\n";
 					print "<form action=\"index.php?command=deleteobjectrelation&objectid=" . $_GET['objectid'] . "\" method=\"post\">";
-					print "<a href=\"index.php?command=viewobject&objectid=" . $row['objectid1'] . "\">" . htmlentities($row['objectname1']) . "</a> " . htmlentities($row['relationdescription']) . " <a href=\"index.php?command=viewobject&objectid=" . $row['objectid2'] . "\">" . htmlentities($row['objectname2']) . "</a>";
+					print "<a href=\"index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid1']) . "\">" . htmlspecialchars($row['objectname1']) . "</a> " . htmlspecialchars($row['relationdescription']) . " <a href=\"index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid2']) . "\">" . htmlspecialchars($row['objectname2']) . "</a>";
 					print '<input type="hidden" name="objectid" value="' . $_GET['objectid'] . '" />';
-					print '<input type="hidden" name="objectrelationid" value="' . htmlentities($row['objectrelationid']) . '" /> ';
+					print '<input type="hidden" name="objectrelationid" value="' . htmlspecialchars($row['objectrelationid']) . '" /> ';
 					print '<input style="float:right;" class="delete" type="submit" name="submit" value="Delete" />';
 					print '</form>';
 					print "</td>\n";
@@ -1373,11 +1372,11 @@ function addobjectproperty($dbc)
 			if ($result = mysql_query($query, $dbc)) { 
 				$row = mysql_fetch_array($result);
 				}
-			$propertytype = $row['type'];	
+			$propertytype = htmlspecialchars($row['type']);	
 			// New property
 			print "<p>Create new property</p>\n";
 			print "<form action=\"index.php?command=storeobjectproperty&objectid=" . $_GET['objectid'] . "\" method=\"post\"";
-			switch ($row['type'])
+			switch ($propertytype)
 			{
 				case 11:
 				case 12:
@@ -1388,11 +1387,11 @@ function addobjectproperty($dbc)
 			}
 			print ">\n";
 			print "<p>" . $row['name'] . ":";
-			geteditpropertydata($dbc, $row['type'], 0);
+			geteditpropertydata($dbc, $propertytype, 0);
 			print "\n";
 			print '<input type="hidden" name="objectid" value="' . $_GET['objectid'] . '" />';
 			print '<input type="hidden" name="propertyid" value="' . $_POST['propertyid'] . '" />';
-			print '<input type="hidden" name="propertytype" value="' . $row['type'] . '" />';
+			print '<input type="hidden" name="propertytype" value="' . $propertytype . '" />';
 			print '<input type="checkbox" name="newshared">Shared property';
 			print "<p class=\"note\">(Shared properties can be used by several objects and editing them will change the value for every object)</p>\n";
 			print '<input type="hidden" name="shared" value="0" />';
@@ -1409,7 +1408,7 @@ function addobjectproperty($dbc)
 			// Run the query
 			if ($result = mysql_query($query, $dbc)) { 
 				while ($row = mysql_fetch_array($result)) {
-					print "<option value=\"" . $row['objectpropertyid'] . "\">{$row['propertyname']} from \"{$row['objectname']}\"</option>\n";
+					print "<option value=\"" . htmlspecialchars($row['objectpropertyid']) . "\">" . htmlspecialchars($row['propertyname']) . " from \"" . htmlspecialchars($row['objectname']) . "\"</option>\n";
 				};
 			}
 			print "</select>\n";
@@ -1477,7 +1476,7 @@ function editobjectproperty($dbc)
 			if ($result = mysql_query($query, $dbc)) { 
 				$row = mysql_fetch_array($result);
 				}
-			$propertytype = $row['propertytype'];
+			$propertytype = htmlspecialchars($row['propertytype']);
 			print "<form action=\"index.php?command=updateobjectproperty&objectpropertyid=" . $_POST['objectpropertyid'] . "&objectid=" . $_POST['objectid'] . "\" method=\"post\"";
 			// Needed to upload files
 			switch ($row['propertytype'])
@@ -1498,7 +1497,7 @@ function editobjectproperty($dbc)
 			geteditpropertydata($dbc, $row['propertytype'], $_POST['objectpropertyid']);
 			print '<input type="hidden" name="objectid" value="' . $_GET['objectid'] . '" />';
 			print '<input type="hidden" name="objectpropertyid" value="' . $_POST['objectpropertyid'] . '" />';
-			print '<input type="hidden" name="propertytype" value="' . $row['propertytype'] . '" />';
+			print '<input type="hidden" name="propertytype" value="' . $propertytype . '" />';
 			print "<input class=\"save\"type=\"submit\" name=\"submit\" value=\"Save\" /></p>\n";
 			print "</form>\n";
 			// Used by these objects if shared
@@ -1510,7 +1509,7 @@ function editobjectproperty($dbc)
 				// Run the query
 				if ($result = mysql_query($query, $dbc)) { 
 					while ($row = mysql_fetch_array($result)) {
-						print "<tr><td><a href=\"index.php?command=viewobject&id={$row['objectid']}\">{$row['objectname']}</a></td></tr>\n";
+						print "<tr><td><a href=\"index.php?command=viewobject&id=" . htmlspecialchars($row['objectid']) . "\">" . htmlspecialchars($row['objectname']) . "</a></td></tr>\n";
 					};
 				}
 				print "</table>\n";
@@ -1518,7 +1517,7 @@ function editobjectproperty($dbc)
 					print "<form style=\"float:right;\" action=\"index.php?command=deleteobjectproperty&objectpropertyid=" . $_POST['objectpropertyid'] . "&objectid=" . $_GET['objectid'] . "\" method=\"post\">";
 					print '<input type="hidden" name="objectid" value="' . $_GET['objectid'] . '" />';
 					print '<input type="hidden" name="propertytype" value="' . $propertytype . '" />';
-					print '<input type="hidden" name="objectpropertyshared" value="' . htmlentities($row['objectpropertyshared']) . '" />';
+					print '<input type="hidden" name="objectpropertyshared" value="' . htmlspecialchars($row['objectpropertyshared']) . '" />';
 					print "<input style=\"float:left;\" class=\"delete\" type=\"submit\" name=\"submit\" value=\"Delete\" />";
 					print '</form>';
 
@@ -1854,7 +1853,7 @@ function getpropertydata($dbc, $propertytype, $objectpropertyid)
 			if ($result = mysql_query($query, $dbc)) { // Run the query.
 				if ( mysql_num_rows($result) > 0 ) {
 					while ( $row = mysql_fetch_array($result) ) {
-						print $row['data']. "\n";
+						print htmlspecialchars($row['data']) . "\n";
 					}
 				} else {
 					print "<p id=\"clickme\" class=\"error\">Property data not found</p>\n";
@@ -1867,7 +1866,7 @@ function getpropertydata($dbc, $propertytype, $objectpropertyid)
 			if ($result = mysql_query($query, $dbc)) { // Run the query.
 				if ( mysql_num_rows($result) > 0 ) {
 					while ( $row = mysql_fetch_array($result) ) {
-						print "<a href=\"" . $row['data'] . "\" target=\"_blank\">" . $row['data'] . "</a>\n";
+						print "<a href=\"" . htmlspecialchars($row['data']) . "\" target=\"_blank\">" . htmlspecialchars($row['data']) . "</a>\n";
 					}
 				} else {
 					print "<p id=\"clickme\" class=\"error\">Property data not found</p>\n";
@@ -1881,7 +1880,7 @@ function getpropertydata($dbc, $propertytype, $objectpropertyid)
 			if ($result = mysql_query($query, $dbc)) { // Run the query.
 				if ( mysql_num_rows($result) > 0 ) {
 					while ( $row = mysql_fetch_array($result) ) {
-  						print "[Filename: {$row['filename']}]";
+  						print "[Filename: " . htmlspecialchars($row['filename']) . "]";
 						//print "[Filetype: {$row['filetype']}] ";
 						//print "[Filesize: {$row['filesize']}]</div>\n";
 					}
@@ -1897,7 +1896,7 @@ function getpropertydata($dbc, $propertytype, $objectpropertyid)
 				if ( mysql_num_rows($result) > 0 ) {
 					$row = mysql_fetch_array($result);
 					print "<a href=\"rend/showpropimg.php?command=show&id=$objectpropertyid\" rel=\"lightbox[propertygalery]\" title=\"{$row['filename']}\"><img alt=\"Image\" src=\"rend/showpropimg.php?command=show&id=$objectpropertyid\" width=\"200\"/></a>\n";
-  					print "[Filename: {$row['filename']}]";
+  					print "[Filename: " . htmlspecialchars($row['filename']) . "]";
 					//print "[Filetype: {$row['filetype']}] ";
 					//print "[Filesize: {$row['filesize']}]</div>\n";
 				} else {
@@ -1911,8 +1910,8 @@ function getpropertydata($dbc, $propertytype, $objectpropertyid)
 			if ($result = mysql_query($query, $dbc)) { // Run the query.
 				if ( mysql_num_rows($result) > 0 ) {
 					$row = mysql_fetch_array($result);
-					print "<a href=\"{$row['filedata']}\" target=\"_blank\">Download</a>\n";
-  					print "[Filename: {$row['filename']}]";
+					print "<a href=\"" . htmlspecialchars($row['filedata']) . "\" target=\"_blank\">Download</a>\n";
+  					print "[Filename: " . htmlspecialchars($row['filename']) . "]";
 					//print "[Filetype: {$row['filetype']}] ";
 					//print "[Filesize: {$row['filesize']}]</div>\n";
 				} else {
@@ -1926,8 +1925,8 @@ function getpropertydata($dbc, $propertytype, $objectpropertyid)
 			if ($result = mysql_query($query, $dbc)) { // Run the query.
 				if ( mysql_num_rows($result) > 0 ) {
 					$row = mysql_fetch_array($result);
-					print "<a href=\"{$row['filedata']}\" rel=\"lightbox[propertygalery]\" title=\"{$row['filename']}\"><img alt=\"Image\" src=\"{$row['filedata']}\" width=\"200\"/></a>\n";
-  					print "[Filename: {$row['filename']}]";
+					print "<a href=\"" . htmlspecialchars($row['filedata']) . "\" rel=\"lightbox[propertygalery]\" title=\"" . htmlspecialchars($row['filename']) . "\"><img alt=\"Image\" src=\"" . htmlspecialchars($row['filedata']) . "\" width=\"200\"/></a>\n";
+  					print "[Filename: " . $row['filename'] . "]";
 					//print "[Filetype: {$row['filetype']}] ";
 					//print "[Filesize: {$row['filesize']}]</div>\n";
 				} else {

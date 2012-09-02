@@ -1,0 +1,29 @@
+<?php // header.html
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" media="all" href="css/style.css" />
+	<link href="css/lightbox.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script src="js/lightbox.js"></script>
+	<title>
+	<?php // Print the page title.
+	$APPTITLE = getappname();
+	$APPVER = getappver();
+		if (isset($APPTITLE) == FALSE ) { // Is the title defined?
+			$APPTITLE = 'Object Relations';
+		}
+		if (isset($APPVER) == FALSE ) { // Is the version defined?
+			$APPVER = 'v0.0.0 Design Concept Version';
+		}
+		print "$APPTITLE\n";
+	?>
+	</title>
+</head>
+<body>
+	<div id="container">
+		<h1><a href="index.php"><?php print $APPTITLE;?></a></h1>

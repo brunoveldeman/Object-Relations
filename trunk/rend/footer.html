@@ -1,0 +1,29 @@
+<?php // footer.html
+
+if (isset($auth) && $auth) {
+	print "<p class=\"username\">Logged in as '$authname'</p>";
+} else {
+	print "<hr /><p>Not logged in</p>";
+}
+
+?>
+	</div>
+	<div id="footer">"Object relations" Copyright &copy; 2012 by Bruno Veldeman</div>
+	<script>
+  		var def = $.Deferred();
+		$(".info").click(def.resolve);
+		setTimeout(def.resolve, 3000);
+		def.done(function() {
+    		$(".info").fadeOut("slow");
+		});
+  	</script>
+  	<script>
+  		var def = $.Deferred();
+		$(".error").click(def.resolve);
+		def.done(function() {
+    		$(".error").fadeOut("slow");
+		});
+  </script>
+
+</body>
+</html>

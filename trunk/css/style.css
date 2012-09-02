@@ -1,0 +1,386 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dd,dl,dt,li,ol,ul,fieldset,form,label,legend,table,caption,textarea,tbody,tfoot,thead,tr,th,td
+{ 
+	margin:0;
+	padding:0;
+	border:0;
+	font-weight:inherit;
+	font-style:inherit;
+	font-size:100%;
+	line-height:1.2;
+	font-family:Geneva,	Arial, Helvetica, sans-serif;
+	text-align:left;
+	vertical-align:top;
+}
+
+a img,:link img,:visited img{
+	border:0;
+}
+
+ol,ul
+{
+	list-style:none;
+}
+
+q:before,q:after,blockquote:before,blockquote:after
+{
+	content:"-";
+}
+
+
+body
+{
+	background:#fefefe;
+	color:#AAA;
+}
+
+
+a:link,a:visited
+{
+	text-decoration:none;
+	color:#55AAAA;
+}
+a:hover
+{
+	color:#333;
+	text-decoration:none;
+}
+
+a:active
+{
+	text-decoration:none;
+	color:#333;
+}
+
+#container
+{
+	margin:20px auto 30px;
+	width:92%;
+	background: #DDFFFF;
+	box-shadow: 10px 10px 5px #888888;
+	border: 2px solid black;
+	padding: 5px 0px 15px 0px;
+}
+
+#footer {
+	padding:0px 10px 0px 10px;
+	color:#888;
+	background:#DDDDDD;
+	font-size:12px;
+	margin-bottom:50px;
+	text-align:right;
+	border: 2px solid #FF8C00;
+	margin-left:auto;
+	margin-right:auto;
+	box-shadow: 2px 2px 10px #FF9C33;
+}
+
+h1,h2,h3,h4,h5,h6
+{ 
+	color:#999;
+	font-weight:bolder;
+	padding:0px 2px 4px 15px;
+}
+h1
+{
+	font-size:24px;
+}
+h2{ font-size:20px; }
+h3{ font-size:16px; }
+h4{ font-size:12px; }
+h5{ font-size:10px; }
+h6{ font-size:8px; }
+
+p{ font-size:medium; line-height:2; }
+ul,ol{ margin:25px; }
+ul li, ol li { padding-left:10px; }
+
+ul{ list-style:square inside; }
+
+ol{ list-style:decimal inside; }
+
+blockquote{ margin:15px; border-left:5px #FFDF00 solid; padding:7px; color:#999; font-style:italic; }
+
+pre { margin:10px; border-left:5px #FFDF00 solid; padding:10px; font-family:"Courier New", Courier, monospace; }
+
+h1:after,h2:after,h3:after,h4:after,h5:after,h6:after,li:after{ content:"."; color:#FF8C00; font-family:Helvatica, Arial, sans-serif; }
+
+li:after{ font-size:24px; }
+
+p { margin-top: 1em; } 
+
+/* Table styling */
+table {
+	width: 100%;	
+	border: 1px solid black;
+	border-collapse:collapse;
+	border-spacing:0px;
+	overflow:hidden;
+	background: #F0F0F0;
+}
+th {
+	padding: 5px 5px 5px 5px;
+	border: 1px solid black;
+	font-weight: normal;
+	font-size: 16px;
+	color: #049;
+	background: #D0D0D0;
+}
+td {
+	font-size: 12px;
+	padding: 3px;
+	border: 1px solid black;
+	color: #669;
+	border-top: 1px solid #fff;
+	vertical-align: top;
+}
+tbody tr:hover td
+{
+	color: #339;
+	background: #d0dafd;
+}
+
+.object {
+	background: #AAAAE0;
+	color: #FFFFFF;
+	vertical-align: top;
+}
+
+.properties {
+	background: #8888C0;
+	color: #FFFFFF;
+	vertical-align: top;
+}
+
+.relations {
+	background: #6666A0;
+	color: #FFFFFF;
+	vertical-align: top;
+}
+
+.menu 
+{
+	font-size: 16px;
+	padding: 2px;
+	background: #777777;
+	color: #FFFFFF;
+	border: 0px solid black;
+}
+
+a.menu:link,a.menu:visited{ text-decoration:none; color:#FFFFFF}
+a.menu:hover{ text-decoration:none; color:#FFFF33; background:#000000}
+a.menu:active{ text-decoration:none; color:#FFFFFF}
+
+.error
+{
+	font-size: 16px;
+	padding: 2px;
+	background: #FFDDDD;
+	color: #AA0000;
+	border: 5px solid #AA0000;
+	position:fixed;
+	top:20px;
+	right:60px;
+	width:60%;
+	cursor:default;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:center;
+  	box-shadow: 10px 10px 5px #888888;
+}
+
+p.error:after
+{ 
+	content:"\a[Click to close]";
+	white-space: pre;
+	font-size: 12px;
+	color:#AA0000;
+	font-family:Helvatica, Arial, ,sans-serif;
+}
+
+.info
+{
+	font-size: 16px;
+	padding: 20px;
+	background: #DDDDDD;
+	color: #00AA00;
+	border: 2px solid #00AA00;
+	position:fixed;
+	top:30%;
+	width:60%;
+	left:20%;
+	cursor:default;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:center;
+/* 	margin-left:auto;
+	margin-right:auto; */
+	box-shadow: 10px 10px 5px #888888;
+}
+
+#fade{
+  	opacity:100; 
+}
+
+#clickme{
+	opacity:100;
+}
+
+.username
+{
+	font-size: 12px;
+	padding: 0px;
+	background: #FFFFFF;
+	color: #999999;
+	border: 2px solid #999999;
+	width:30%;
+	cursor:default;
+	overflow:hidden;
+	border-radius:2px;
+  	text-align:center;
+  	margin-left:auto;
+	margin-right:auto;
+}
+
+.note
+{
+	font-size: 10px;
+	padding: 1px;
+	color: #00AA00;	
+}
+
+.result
+{
+	font-size: 10px;
+	padding: 1px 5px 3px 5px;
+	color: #FFFFFF;	
+	background: #777777;
+}
+
+.next
+{
+	font-size: 16px;
+	padding: 2px;
+	background: none;
+	color: #00AA00;
+	border: 2px solid #00AA00;
+	position:fixed;
+	top:80px;
+	right:2px;
+	width:30px;
+	cursor:default;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:center;
+}
+
+.prev
+{
+	font-size: 16px;
+	padding: 2px;
+	background: none;
+	color: #00AA00;
+	border: 2px solid #00AA00;
+	position:fixed;
+	top:80px;
+	left:2px;
+	width:30px;
+	cursor:default;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:center;
+}
+
+input.field, textarea.field, select.field 
+{
+	border:none;
+	font-size:12px;
+	padding:0px;
+	width:100%;
+	background:#EEEEFF;
+}
+
+input.save
+{
+	border:0;
+	font-size:14px;
+	background:#55FF55;
+	color:#000000;
+	cursor:pointer;
+	padding:1px;
+	float:right;
+}
+
+input.delete
+{
+	border:0;
+	font-size:14px;
+	background:#FF5555;
+	color:#000000;
+	cursor:pointer;
+	padding:1px;
+}
+
+input.edit
+{
+	border:1px solid #777777;
+	font-size: 10px;
+	background: #668844;
+	color:#AAFFAA;
+	float:right;
+	cursor:pointer;
+}
+
+select.edit
+{
+	border:1px solid #777777;
+	font-size: 10px;
+	background: #448844;
+	color:#AAFFAA;
+	cursor:pointer;
+}
+
+input.createreport
+{
+	border:1px solid #777777;
+	font-size: 12px;
+	background: #668844;
+	color:#AAFFAA;
+	border: 1px solid black;
+	cursor:pointer;
+	padding: 2px 10px 2px 10px;
+}
+
+input.searchbutton
+{
+	border:1px solid #777777;
+	font-size: 14px;
+	background: #446688;
+	color:#AAFFAA;
+	border: 1px solid black;
+}
+
+.group
+{
+	font-size: 14px;
+	padding: 15px 10px 5px 10px;
+	background: #EEEEEE;
+	color: #669;
+	border: 2px solid #000000;
+	cursor:default;
+}
+
+.splash
+{
+	font-size: 16px;
+	padding: 20px;
+	background: #EEEEFF;
+	color: #4444AA;
+	border: 2px solid #FF8C00;
+	cursor:default;
+	overflow:hidden;
+	border-radius:0px;
+  	text-align:right;
+ 	margin-left:auto;
+	margin-right:auto;
+	box-shadow: 10px 10px 5px #888888;
+}

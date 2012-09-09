@@ -742,8 +742,8 @@ function showabout() {
 /********************************************************************/
 function showsplash() {
 	print "<div class=\"splash\">\n";
-	print "<div>\n";
-	print "<br />\n";
+	print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\">\n";
+	//print "<img src=\"images/logo.svg\" />\n";
 	print "</div>\n";
 	print "</div>\n";
 }

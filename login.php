@@ -51,8 +51,7 @@ if(isset($_POST['username']) && isset($_POST['password']) && $_POST['username'] 
 			$_SESSION['userid'] = getuserid();
 			// redirect to index.php after 2.5s
 			print "<script>window.setTimeout(function() { window.location.href = 'index.php'; }, 0);</script>\n";
-			print "<div><a href=\"index.php\">Click here if not redirected</a>\n";
-			print "<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />\n";
+			print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"><a href=\"index.php\">Click here if not redirected</a>\n";
 			print "</div>\n";
 		} else {
 			setauth(false);
@@ -73,7 +72,7 @@ include('rend/footer.html');
 
 function loginpage($dbc) {
 	// Show login screen form
-	print "<div style=\"width:350px; margin: 0px auto;\"><br /><br /><br /><div class=\"login\">\n";
+	print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"><br /><br /><br /><br /><br /><div style=\"width:300px\" class=\"login\">\n";
 	print "<form action=\"login.php\" method=\"post\">\n";
 	print "<div>User Name:<br /><input type=\"text\" name=\"username\" size=\"45\" /></div>\n";
 	print "<div>Password:<br /><input type=\"password\" name=\"password\" size=\"45\" /></div><br />\n";

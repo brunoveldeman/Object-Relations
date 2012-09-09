@@ -1,4 +1,21 @@
 <?php 
+/* Legal Stuff
+
+	This file is part of Object relations.
+
+    Object Relations is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Object relations is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Object Relations.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 /**************************************************************************************/
 /* General                                                                            */
@@ -348,26 +365,51 @@ function getsearch($searchstr) {
 function showmenu($dbc)
 {
 	print "<div class=\"menu\">\n";
-	print "<a class=\"menu\" href=\"index.php?command=listobjects\">Objects</a>\n";
 	print " | ";
-	print "<a class=\"menu\" href=\"index.php?command=listtypes\">Types</a>\n";
-	print " | ";
-	print "<a class=\"menu\" href=\"index.php?command=listproperties\">Properties</a>\n";
-	print " | ";
-	print "<a class=\"menu\" href=\"index.php?command=listrelations\">Relations</a>\n";
-	print " | ";
-	print "<a class=\"menu\" href=\"index.php?command=reports\">Reports</a>\n";
+	if (getperm('listobjects')) { 
+		print "<a class=\"menu\" href=\"index.php?command=listobjects\">Objects</a>\n";
+		print " | ";
+	};
+	if (getperm('listtypes')) { 
+		print "<a class=\"menu\" href=\"index.php?command=listtypes\">Types</a>\n";
+		print " | ";
+	};
+	if (getperm('listproperties')) { 
+		print "<a class=\"menu\" href=\"index.php?command=listproperties\">Properties</a>\n";
+		print " | ";
+		};
+	if (getperm('listrelations')) { 
+		print "<a class=\"menu\" href=\"index.php?command=listrelations\">Relations</a>\n";
+		print " | ";
+		};
+	if (getperm('reports')) { 
+		print "<a class=\"menu\" href=\"index.php?command=reports\">Reports</a>\n";
+		print " | ";
+	};
+	if (getperm('usermanagement')) { 
+		print "<a class=\"menu\" href=\"index.php?command=listusers\">User Management</a>\n";
+		print " | ";
+	};
+	if (getauth()) { 
+		print "<a class=\"menu\" href=\"index.php?command=logout\">Logout</a>\n";
+		print " | ";
+	};
+	if (getperm('aboutpage')) { 
+		print "<a class=\"menu\" href=\"index.php?command=aboutpage\">About</a>\n";
+		print " | ";
+	};
 	// Search function
-	if ( isset($_POST['search']) OR isset($_GET['search'])){
-		$search = (isset($_POST['search']) ? $_POST['search'] : $_GET['search']);
-	} else {
-		$search = "";
+	if (getperm('search')) {
+		if ( isset($_POST['search']) OR isset($_GET['search']) ){
+			$search = (isset($_POST['search']) ? $_POST['search'] : $_GET['search']);
+		} else {
+			$search = "";
+		}
+		print "<form style=\"float:right;\" action=\"index.php?command=listobjects\" method=\"post\">\n";
+		print "<input class=\"searchbutton\" type=\"text\" name=\"search\" value=\"" . $search . "\"/>";
+		print "<input class=\"searchbutton\" type=\"submit\" name=\"submit\" value=\"Search\" />\n";
+		print "</form>\n";
 	}
-	print "<form style=\"float:right;\" action=\"index.php?command=listobjects\" method=\"post\">\n";
-	print "<input class=\"searchbutton\" type=\"text\" name=\"search\" value=\"" . $search . "\"/>";
-	print "<input class=\"searchbutton\" type=\"submit\" name=\"submit\" value=\"Search\" />\n";
-	print "</form>\n";
-	
 	print "</div>\n";
 	// Get command and parameters from URI:
 	$command = getcommand();
@@ -378,120 +420,171 @@ function showmenu($dbc)
 			// Show objects
 			print "<div class=\"menu\">";
 			print "&raquo; Object: ";
-			print "<a class=\"menu\" href=\"index.php?command=addobject\"> Add</a>\n";
-			print " | ";
-			print "<a class=\"menu\" href=\"index.php?command=addmobject\"> Add Many</a>\n";
+			if ( getperm('addobject')) {
+				print "<a class=\"menu\" href=\"index.php?command=addobject\"> Add</a>\n";
+				print " | ";
+				print "<a class=\"menu\" href=\"index.php?command=addmobject\"> Add Many</a>\n";
+			};
 			print "</div>\n";
 			break;
 		case 'listtypes':
 			// Show types
 			print "<div class=\"menu\">";
 			print "&raquo; Type: ";
-			print "<a class=\"menu\" href=\"index.php?command=addtype\"> Add</a>\n";
+			if ( getperm('addtype')) {
+				print "<a class=\"menu\" href=\"index.php?command=addtype\"> Add</a>\n";
+			}
 			print "</div>\n";
 			break;
 		case 'listproperties':
 			// Show properties
 			print "<div class=\"menu\">";
 			print "&raquo; Property: ";
-			print "<a class=\"menu\" href=\"index.php?command=addproperty\"> Add</a>\n";
+			if ( getperm('addproperty')) {
+				print "<a class=\"menu\" href=\"index.php?command=addproperty\"> Add</a>\n";
+			}
 			print "</div>\n";
 			break;
 		case 'listrelations':
 			// Show relations
 			print "<div class=\"menu\">";
 			print "&raquo; Relation: ";
-			print "<a class=\"menu\" href=\"index.php?command=addrelation\"> Add</a>\n";
+			if ( getperm('addrelation')) {
+				print "<a class=\"menu\" href=\"index.php?command=addrelation\"> Add</a>\n";
+			}
 			print "</div>\n";
 			break;
 		case 'viewobject':
 			// Show object details
 			print "<div class=\"menu\">";
 			print "&raquo; Object View: ";
-			print "<a class=\"menu\" href=\"index.php?command=editobject&objectid={$_GET['objectid']}\"> Edit</a>\n";
-			print " | ";
-			print "<a class=\"menu\" href=\"index.php?command=addobject\"> Add</a>\n";
-			print " | ";
-			print "<a class=\"menu\" href=\"index.php?command=addmobject\"> Add Many</a>\n";
+			if ( getperm('editobject')) {
+				print "<a class=\"menu\" href=\"index.php?command=editobject&objectid={$_GET['objectid']}\"> Edit</a>\n";
+			}
+			if ( getperm('addobject') && getperm('editobject') ) {
+				print " | ";
+			}
+			if ( getperm('addobject')) {
+				print "<a class=\"menu\" href=\"index.php?command=addobject\"> Add</a>\n";
+				print " | ";
+				print "<a class=\"menu\" href=\"index.php?command=addmobject\"> Add Many</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewobject&objectid=" . getprevrow($dbc, "object", $_GET['objectid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewobject&objectid=" . getnextrow($dbc, "object", $_GET['objectid']) . "';\">&gt;</p>\n";
+			if ( getperm('viewobject') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewobject&objectid=" . getprevrow($dbc, "object", $_GET['objectid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewobject&objectid=" . getnextrow($dbc, "object", $_GET['objectid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'viewtype':
 			// Show type details
 			print "<div class=\"menu\">";
 			print "&raquo; Type View: ";
-			print "<a class=\"menu\" href=\"index.php?command=edittype&typeid={$_GET['typeid']}\"> Edit</a>\n";
+			if ( getperm('edittype') ) {
+				print "<a class=\"menu\" href=\"index.php?command=edittype&typeid={$_GET['typeid']}\"> Edit</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewtype&typeid=" . getprevrow($dbc, "type", $_GET['typeid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewtype&typeid=" . getnextrow($dbc, "type", $_GET['typeid']) . "';\">&gt;</p>\n";
+			if ( getperm('viewtype') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewtype&typeid=" . getprevrow($dbc, "type", $_GET['typeid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewtype&typeid=" . getnextrow($dbc, "type", $_GET['typeid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'viewproperty':
 			// Show property details
 			print "<div class=\"menu\">";
 			print "&raquo; Property View: ";
-			print "<a class=\"menu\" href=\"index.php?command=editproperty&propertyid={$_GET['propertyid']}\"> Edit</a>\n";
+			if ( getperm('editproperty') ) {
+				print "<a class=\"menu\" href=\"index.php?command=editproperty&propertyid={$_GET['propertyid']}\"> Edit</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewproperty&propertyid=" . getprevrow($dbc, "property", $_GET['propertyid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewproperty&propertyid=" . getnextrow($dbc, "property", $_GET['propertyid']) . "';\">&gt;</p>\n";
+			if ( getperm('viewproperty') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewproperty&propertyid=" . getprevrow($dbc, "property", $_GET['propertyid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewproperty&propertyid=" . getnextrow($dbc, "property", $_GET['propertyid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'viewrelation':
 			// Show Relation details
 			print "<div class=\"menu\">";
 			print "&raquo; Relation View: ";
-			print "<a class=\"menu\" href=\"index.php?command=editrelation&relationid={$_GET['relationid']}\"> Edit</a>\n";
+			if ( getperm('editrelation') ) {
+				print "<a class=\"menu\" href=\"index.php?command=editrelation&relationid={$_GET['relationid']}\"> Edit</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewrelation&relationid=" . getprevrow($dbc, "relation", $_GET['relationid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewrelation&relationid=" . getnextrow($dbc, "relation", $_GET['relationid']) . "';\">&gt;</p>\n";
+			if ( getperm('viewrelation') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=viewrelation&relationid=" . getprevrow($dbc, "relation", $_GET['relationid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=viewrelation&relationid=" . getnextrow($dbc, "relation", $_GET['relationid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'editobject':
 		case 'updateobjectproperty':
+		case 'storeobjectproperty':
+		case 'addobjectrelation':
+		case 'deleteobjectrelation':
 			// Edit object details
 			print "<div class=\"menu\">";
 			print "&raquo; Object Edit: ";
-			print "<a class=\"menu\" href=\"index.php?command=viewobject&objectid={$_GET['objectid']}\"> View</a>\n";
-			print " | ";
-			print "<a class=\"menu\" href=\"index.php?command=addobject\"> Add</a>\n";
-			print " | ";
-			print "<a class=\"menu\" href=\"index.php?command=addmobject\"> Add Many</a>\n";
+			if ( getperm('viewobject') ) {
+				print "<a class=\"menu\" href=\"index.php?command=viewobject&objectid={$_GET['objectid']}\"> View</a>\n";
+			}
+			if ( getperm('addobject') && getperm('viewobject') ) {
+				print " | ";
+			}
+			if ( getperm('addobject')) {
+				print "<a class=\"menu\" href=\"index.php?command=addobject\"> Add</a>\n";
+				print " | ";
+				print "<a class=\"menu\" href=\"index.php?command=addmobject\"> Add Many</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=editobject&objectid=" . getprevrow($dbc, "object", $_GET['objectid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=editobject&objectid=" . getnextrow($dbc, "object", $_GET['objectid']) . "';\">&gt;</p>\n";
+			if ( getperm('editobject') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=editobject&objectid=" . getprevrow($dbc, "object", $_GET['objectid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=editobject&objectid=" . getnextrow($dbc, "object", $_GET['objectid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'edittype':
 			// Edit type details
 			print "<div class=\"menu\">";
 			print "&raquo; Type View: ";
-			print "<a class=\"menu\" href=\"index.php?command=viewtype&typeid={$_GET['typeid']}\"> View</a>\n";
+			if ( getperm('viewtype') ) {
+				print "<a class=\"menu\" href=\"index.php?command=viewtype&typeid={$_GET['typeid']}\"> View</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=edittype&typeid=" . getprevrow($dbc, "type", $_GET['typeid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=edittype&typeid=" . getnextrow($dbc, "type", $_GET['typeid']) . "';\">&gt;</p>\n";
+			if ( getperm('edittype') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=edittype&typeid=" . getprevrow($dbc, "type", $_GET['typeid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=edittype&typeid=" . getnextrow($dbc, "type", $_GET['typeid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'editproperty':
 			// Edit property details
 			print "<div class=\"menu\">";
 			print "&raquo; Property View: ";
-			print "<a class=\"menu\" href=\"index.php?command=viewproperty&propertyid={$_GET['propertyid']}\"> View</a>\n";
+			if ( getperm('viewproperty') ) {
+				print "<a class=\"menu\" href=\"index.php?command=viewproperty&propertyid={$_GET['propertyid']}\"> View</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=editproperty&propertyid=" . getprevrow($dbc, "type", $_GET['propertyid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=editproperty&propertyid=" . getnextrow($dbc, "type", $_GET['propertyid']) . "';\">&gt;</p>\n";
+			if ( getperm('editproperty') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=editproperty&propertyid=" . getprevrow($dbc, "type", $_GET['propertyid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=editproperty&propertyid=" . getnextrow($dbc, "type", $_GET['propertyid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'editrelation':
 			// Edit relation details
 			print "<div class=\"menu\">";
 			print "&raquo; Relation View: ";
-			print "<a class=\"menu\" href=\"index.php?command=viewrelation&relationid={$_GET['relationid']}\"> View</a>\n";
+			if ( getperm('viewrelation') ) {
+				print "<a class=\"menu\" href=\"index.php?command=viewrelation&relationid={$_GET['relationid']}\"> View</a>\n";
+			}
 			print "</div>\n";
 			// Next - Prev buttons
-			print "<p class=\"prev\" OnClick=\"location.href='index.php?command=editrelation&relationid=" . getprevrow($dbc, "relation", $_GET['relationid']) . "';\">&lt;</p>\n";
-			print "<p class=\"next\" OnClick=\"location.href='index.php?command=editrelation&relationid=" . getnextrow($dbc, "relation", $_GET['relationid']) . "';\">&gt;</p>\n";
+			if ( getperm('editrelation') ) {
+				print "<p class=\"prev\" OnClick=\"location.href='index.php?command=editrelation&relationid=" . getprevrow($dbc, "relation", $_GET['relationid']) . "';\">&lt;</p>\n";
+				print "<p class=\"next\" OnClick=\"location.href='index.php?command=editrelation&relationid=" . getnextrow($dbc, "relation", $_GET['relationid']) . "';\">&gt;</p>\n";
+			}
 			break;
 		case 'reports':
 			// Report
@@ -499,9 +592,119 @@ function showmenu($dbc)
 			print "&raquo; Reports: ";
 			print "</div>\n";
 			break;
+		case 'usermanagement':
+		case 'listusers':
+		case 'adduser':
+		case 'listgroups':
+		case 'addgroup':
+			// Usermanagement
+			print "<div class=\"menu\">";
+			print "&raquo; User Management:\n";
+			if ( getperm('listusers') ) {
+				print " | \n";
+				print "<a class=\"menu\" href=\"index.php?command=listusers\">List Users</a>\n";
+			}
+			if ( getperm('adduser') ) {
+				print " | \n";
+				print "<a class=\"menu\" href=\"index.php?command=adduser\">Add User</a>\n";
+			}
+			if ( getperm('listgroups') ) {
+				print " | \n";
+				print "<a class=\"menu\" href=\"index.php?command=listgroups\">List groups</a>\n";
+			}
+			if ( getperm('addgroup') ) {
+				print " | \n";
+				print "<a class=\"menu\" href=\"index.php?command=addgroup\">Add Group</a>\n";
+			}
+			if ( getperm('adduser') ) {
+				print " | \n";
+			}
+			
+			print "</div>\n";
+			break;
 		default:
 			print "<div class=\"menu\">&nbsp;</div>\n";
 	}
+}
+
+/*******************************************************************/
+/* function                                                        */
+/*   showabout                                                    */
+/*******************************************************************/
+//
+// Description:
+//   Show the about screen
+// Inputs: 
+//   function:
+//	   ():
+//       none
+//   POST:
+//	   none
+//   GET:
+//	   none
+// Output:
+//   return:
+//     none
+//   HTML:
+//     static html
+//   MYSQL:
+//     none
+//   GET:
+//     none
+//   POST:
+//     none
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   User should not see PHP version or Server software version. Hide for normal users.
+/********************************************************************/
+function showabout() {
+	print "<div class=\"splash\">\n";
+	print "<div>\n";
+	print "<h1>" . getappname() . "</h1>\n";
+	print "</div>\n";
+	print "<hr/>\n";
+	print "<div>\n";
+	print "<h3>Version: " . getappver() . "</h3>\n";
+	print "</div>\n";
+	print "<hr/>\n";
+	print "<h2>Flexible database to store object relations</h2>\n";
+	print "<hr/>\n";
+	print "<div class=\"splash\">\n";
+	print "<div>Programming language: PHP</div>\n";
+	print "<div>Database engine: MySQL</div>\n";
+	print "<div>Uses jQuery (GNU General Public License (GPL) Version 2) and LighBox2 (Some license I  could not find)</div>\n";
+	print "</div>\n";
+	print "<hr/>\n";
+	print "<div class=\"splash\">\n";
+	print "<div>PHP Version: " . phpversion() . "</div>\n";
+	print "<hr/>\n";
+	print "<div>Server: " . $_SERVER['SERVER_SOFTWARE'] . "</div>\n";
+	print "<hr/>\n";
+	print "<div>User Agent: " . $_SERVER['HTTP_USER_AGENT'] . "</div>\n";
+	print "</div>\n";
+	print "<hr/>\n";
+	print "<div class=\"splash\">\n";
+	print "<div>\n";
+	print "<p>Licence:</p>\n";
+	print "<p>Object Relations: Flexible database for storing object relations</p>";
+    print "<p>Copyright (C) 2012  Bruno Veldeman</p>";
+    print "<p>This program is free software: you can redistribute it and/or modify ";
+    print "it under the terms of the GNU General Public License as published by ";
+    print "the Free Software Foundation, either version 3 of the License, or ";
+    print "(at your option) any later version.</p>";
+    print "<p>This program is distributed in the hope that it will be useful, ";
+    print "but WITHOUT ANY WARRANTY; without even the implied warranty of ";
+    print "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ";
+    print "GNU General Public License for more details.</p>";
+
+    print "<p>You should have received a copy of the GNU General Public License ";
+    print "along with this program.  If not, see http://www.gnu.org/licenses/.</p>";
+	print "</div>\n";
+	print "</div>\n";
+	print "</div>\n";
 }
 
 /*******************************************************************/
@@ -540,26 +743,7 @@ function showmenu($dbc)
 function showsplash() {
 	print "<div class=\"splash\">\n";
 	print "<div>\n";
-	print "<h1>" . getappname() . "</h1>\n";
-	print "</div>\n";
-	print "<hr/>\n";
-	print "<div>\n";
-	print "<h3>Version: " . getappver() . "</h3>\n";
-	print "</div>\n";
-	print "<hr/>\n";
-	print "<h2>Flexible database to store object relations</h2>\n";
-	print "<hr/>\n";
-	print "<div class=\"splash\">\n";
-	print "<div>Programming language: PHP</div>\n";
-	print "<div>Database engine: MySQL</div>\n";
-	print "</div>\n";
-	print "<hr/>\n";
-	print "<div class=\"splash\">\n";
-	print "<div>PHP Version: " . phpversion() . "</div>\n";
-	print "<hr/>\n";
-	print "<div>Server: " . $_SERVER['SERVER_SOFTWARE'] . "</div>\n";
-	print "<hr/>\n";
-	print "<div>User Agent: " . $_SERVER['HTTP_USER_AGENT'] . "</div>\n";
+	print "<br />\n";
 	print "</div>\n";
 	print "</div>\n";
 }
@@ -944,7 +1128,6 @@ function addobject($dbc)
 			$error=true;
 		}
 		listobjects($dbc);
-		//header( 'Location: index.php?command=listobjects' );
 	} elseif (!$error)
 	{	// Show the form
 		print "<form action=\"index.php?command=addobject\" method=\"post\">\n";
@@ -2017,9 +2200,9 @@ function geteditpropertydata($dbc, $propertytype, $objectpropertyid)
 				if ($result = mysql_query($query, $dbc)) { // Run the query.
 					if ( mysql_num_rows($result) > 0 ) {
 						$row = mysql_fetch_array($result);
-  						print "[Filename: {$row['filename']}] ";
-						print "[Filetype: {$row['filetype']}] ";
-						print "[Filesize: {$row['filesize']}]\n";
+  						print "[Filename: " . htmlspecialchars($row['filename']) . "] ";
+						print "[Filetype: " . htmlspecialchars($row['filetype']) . "] ";
+						print "[Filesize: " . htmlspecialchars($row['filesize']) . "]\n";
 					} else {
 						print "<p id=\"clickme\" class=\"error\">Property data not found</p>\n";
 					}
@@ -2037,9 +2220,9 @@ function geteditpropertydata($dbc, $propertytype, $objectpropertyid)
 				if ($result = mysql_query($query, $dbc)) { // Run the query.
 					if ( mysql_num_rows($result) > 0 ) {
 						$row = mysql_fetch_array($result);
-  						print "[Filename: {$row['filename']}] ";
-						print "[Filetype: {$row['filetype']}] ";
-						print "[Filesize: {$row['filesize']}]\n";
+  						print "[Filename: " . htmlspecialchars($row['filename']) . "] ";
+						print "[Filetype: " . htmlspecialchars($row['filetype']) . "] ";
+						print "[Filesize: " . htmlspecialchars($row['filesize']) . "]\n";
 					} else {
 						print "<p id=\"clickme\" class=\"error\">Property data not found</p>\n";
 					}
@@ -2056,9 +2239,9 @@ function geteditpropertydata($dbc, $propertytype, $objectpropertyid)
 				if ($result = mysql_query($query, $dbc)) { // Run the query.
 					if ( mysql_num_rows($result) > 0 ) {
 						$row = mysql_fetch_array($result);
-	  					print "[Filename: {$row['filename']}] ";
-						print "[Filetype: {$row['filetype']}] ";
-						print "[Filesize: {$row['filesize']}]\n";
+  						print "[Filename: " . htmlspecialchars($row['filename']) . "] ";
+						print "[Filetype: " . htmlspecialchars($row['filetype']) . "] ";
+						print "[Filesize: " . htmlspecialchars($row['filesize']) . "]\n";
 					} else {
 						print "<p id=\"clickme\" class=\"error\">Property data not found</p>\n";
 					}
@@ -2075,10 +2258,10 @@ function geteditpropertydata($dbc, $propertytype, $objectpropertyid)
 				if ($result = mysql_query($query, $dbc)) { // Run the query.
 					if ( mysql_num_rows($result) > 0 ) {
 						$row = mysql_fetch_array($result);
-						print "<a href=\"{$row['filedata']}\" target=\"_blank\"><img alt=\"Image\" src=\"{$row['filedata']}\" width=\"200\"/></a>\n";
-						print "[Filename: {$row['filename']}]";
-						print "[Filetype: {$row['filetype']}] ";
-						print "[Filesize: {$row['filesize']}]\n";
+						print "<a href=\"{$row['filedata']}\" target=\"_blank\"><img alt=\"Image\" src=\"" . htmlspecialchars($row['filedata']) . "\" width=\"200\"/></a>\n";
+  						print "[Filename: " . htmlspecialchars($row['filename']) . "] ";
+						print "[Filetype: " . htmlspecialchars($row['filetype']) . "] ";
+						print "[Filesize: " . htmlspecialchars($row['filesize']) . "]\n";
 					} else {
 						print "<p id=\"clickme\" class=\"error\">Property data not found</p>\n";
 					}
@@ -2202,7 +2385,7 @@ function deleteobjectproperty($dbc)
 
 /*******************************************************************/
 /* function                                                        */
-/*   ?                                                      */
+/*   listtypes                                                      */
 /*******************************************************************/
 //
 // Description:
@@ -2280,13 +2463,13 @@ function listtypes($dbc)
 			$rows = mysql_num_rows($result);
 			// Print the record:
 			print "<tr onClick=\"document.location.href='index.php?command=viewtype&typeid={$row['id']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['id']}</td>\n";
-			print "<td>{$row['name']}</td>\n";
-			print "<td>" . substr( $row['description'], 0, 80 ) . "\n";
-			print "<td>{$row['timestamp']}\n";
+			print "<td>" . htmlspecialchars($row['id']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['name']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['description']), 0, 80 ) . "\n";
+			print "<td>" . htmlspecialchars($row['timestamp']) . "\n";
 			print "</td>\n";			
 			print "<td>\n";
-			print "<form action=\"index.php?command=edittype&typeid=" . $row['id'] . "\" method=\"post\">\n";
+			print "<form action=\"index.php?command=edittype&typeid=" . htmlspecialchars($row['id']) . "\" method=\"post\">\n";
 			print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
 			print "</form>\n";
 			print "</td>\n";			
@@ -2350,15 +2533,11 @@ function viewtype($dbc)
 			print "<th class=\"object\" colspan=\"3\">Type</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name : </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['typename']) . "</td>\n";
+			print "<td class=\"object\">" . htmlspecialchars($row['typename']) . "</td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description : </td>\n";
-			print "<td class=\"object\">" . nl2br(htmlentities($row['typedescription'])) . "</td>\n";
-			print "</tr>\n";
-			print "<tr>\n";
-			print "<td class=\"object\">Type :  </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['typename']) . "</td>\n";
+			print "<td class=\"object\">" . nl2br(htmlspecialchars($row['typedescription'])) . "</td>\n";
 			print "</tr>\n";
 			print "</table>\n";
 		} else { // Couldn't get the information.
@@ -2445,12 +2624,12 @@ function edittype($dbc)
 			print "</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name :</td>\n";
-			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlentities($row['typename']) . "\" /></td>";
+			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlspecialchars($row['typename']) . "\" /></td>";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description :</td>\n";
 			// Check how many lines in the string and adjust the textarea accordingly
-			$lines=explode("\n",htmlentities($row['typedescription']));
+			$lines=explode("\n",htmlspecialchars($row['typedescription']));
 			$rowcount = count($lines);
 			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlentities($row['typedescription']) . "</textarea></td>\n";
 			print "</tr>\n";
@@ -2768,15 +2947,15 @@ function listproperties($dbc)
 		
 			// Print the record:
 			print "<tr onClick=\"document.location.href='index.php?command=viewproperty&propertyid={$row['propertyid']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['propertyid']}</td>\n";
-			print "<td>{$row['propertyname']}</td>\n";
-			print "<td>" . substr( $row['propertydescription'], 0, 80 ) . "\n";
-			print "<td>" . getpropertytype($row['propertytype']) . "</td>\n";
-			print "<td>{$row['propertyclassname']}\n";
-			print "<td>{$row['propertytimestamp']}\n";
+			print "<td>" . htmlspecialchars($row['propertyid']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['propertyname']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['propertydescription']), 0, 80 ) . "\n";
+			print "<td>" . getpropertytype(htmlspecialchars($row['propertytype'])) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['propertyclassname']) . "\n";
+			print "<td>" . htmlspecialchars($row['propertytimestamp']) . "\n";
 			print "</td>\n";			
 			print "<td>\n";
-			print "<form action=\"index.php?command=editproperty&propertyid=" . $row['propertyid'] . "\" method=\"post\">\n";
+			print "<form action=\"index.php?command=editproperty&propertyid=" . htmlspecialchars($row['propertyid']) . "\" method=\"post\">\n";
 			print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
 			print "</form>\n";
 			print "</td>\n";			
@@ -2840,19 +3019,19 @@ function viewproperty($dbc)
 			print "<th class=\"object\" colspan=\"3\">Type</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name : </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['propertyname']) . "</td>\n";
+			print "<td class=\"object\">" . htmlspecialchars($row['propertyname']) . "</td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description : </td>\n";
-			print "<td class=\"object\">" . nl2br(htmlentities($row['propertydescription'])) . "</td>\n";
+			print "<td class=\"object\">" . nl2br(htmlspecialchars($row['propertydescription'])) . "</td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Type :  </td>\n";
-			print "<td class=\"object\">" . getpropertytype($row['propertytype']) . "</td>\n";
+			print "<td class=\"object\">" . getpropertytype(htmlspecialchars($row['propertytype'])) . "</td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Class :  </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['propertyclassname']) . "</td>\n";
+			print "<td class=\"object\">" . htmlspecialchars($row['propertyclassname']) . "</td>\n";
 			print "</tr>\n";
 			print "</table>\n";
 			
@@ -2932,8 +3111,8 @@ function editproperty($dbc)
 		if ($result = mysql_query($query, $dbc)) { // Run the query.
 		
 			$row = mysql_fetch_array($result); // Retrieve the information.
-			$propertyid = $row['propertyid'];
-			$propertyclassid = $row['propertyclassid'];
+			$propertyid = htmlspecialchars($row['propertyid']);
+			$propertyclassid = htmlspecialchars($row['propertyclassid']);
 			// Make the form:
 			print "<form action=\"index.php?command=editproperty&propertyid=" . $_GET['propertyid'] . "\" method=\"post\">";
 			print "<table>";
@@ -2943,29 +3122,29 @@ function editproperty($dbc)
 			print "</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name :</td>\n";
-			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlentities($row['propertyname']) . "\" /></td>";
+			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlspecialchars($row['propertyname']) . "\" /></td>";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description :</td>\n";
 			// Check how many lines in the string and adjust the textarea accordingly
-			$lines=explode("\n",htmlentities($row['propertydescription']));
+			$lines=explode("\n",htmlspecialchars($row['propertydescription']));
 			$rowcount = count($lines);
-			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlentities($row['propertydescription']) . "</textarea></td>\n";
+			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlspecialchars($row['propertydescription']) . "</textarea></td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Type :</td>\n";
 			// Make a select with types
 			print "<td class=\"object\">\n";
 			print "<select class=\"field\" name=\"type\" width=\"100px\">\n";
-			print "<option value=\"0\"" . selectedtrue(0,$row['propertytype']) . ">" . getpropertytype(0) . "</option>\n";
-			print "<option value=\"1\"" . selectedtrue(1,$row['propertytype']) . ">" . getpropertytype(1) . "</option>\n";
-			print "<option value=\"2\"" . selectedtrue(2,$row['propertytype']) . ">" . getpropertytype(2) . "</option>\n";
-			print "<option value=\"3\"" . selectedtrue(3,$row['propertytype']) . ">" . getpropertytype(3) . "</option>\n";
-			print "<option value=\"4\"" . selectedtrue(4,$row['propertytype']) . ">" . getpropertytype(4) . "</option>\n";
-			print "<option value=\"11\"" . selectedtrue(11,$row['propertytype']) . ">" . getpropertytype(11) . "</option>\n";
-			print "<option value=\"12\"" . selectedtrue(12,$row['propertytype']) . ">" . getpropertytype(12) . "</option>\n";
-			print "<option value=\"13\"" . selectedtrue(13,$row['propertytype']) . ">" . getpropertytype(13) . "</option>\n";
-			print "<option value=\"14\"" . selectedtrue(14,$row['propertytype']) . ">" . getpropertytype(14) . "</option>\n";
+			print "<option value=\"0\"" . selectedtrue(0,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(0) . "</option>\n";
+			print "<option value=\"1\"" . selectedtrue(1,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(1) . "</option>\n";
+			print "<option value=\"2\"" . selectedtrue(2,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(2) . "</option>\n";
+			print "<option value=\"3\"" . selectedtrue(3,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(3) . "</option>\n";
+			print "<option value=\"4\"" . selectedtrue(4,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(4) . "</option>\n";
+			print "<option value=\"11\"" . selectedtrue(11,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(11) . "</option>\n";
+			print "<option value=\"12\"" . selectedtrue(12,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(12) . "</option>\n";
+			print "<option value=\"13\"" . selectedtrue(13,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(13) . "</option>\n";
+			print "<option value=\"14\"" . selectedtrue(14,htmlspecialchars($row['propertytype'])) . ">" . getpropertytype(14) . "</option>\n";
 			print "</select>\n";
 			print "</td>\n";
 			print "</tr>\n";
@@ -2977,10 +3156,10 @@ function editproperty($dbc)
 				print "<td class=\"object\"><select width=\"100px\" class=\"field\" name=\"class\">\n";
 				while ($row = mysql_fetch_array($result)) {
 				print '<option';
-				if ( $row['id'] == $propertyclassid ) {
+				if ( htmlspecialchars($row['id']) == $propertyclassid ) {
 					print ' selected="true"';
 			}
-				print ' value ="' . $row['id'] . '">' . $row['name'] . '</option>' ."\n";
+				print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
 				} 
 			} else { // Couldn't get the information.
 				print '<p id="clickme" class="error">Could not retrieve the object because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
@@ -3090,7 +3269,7 @@ function addproperty($dbc)
 			print '<p>Property class <select class="field" name="class_id">' . "\n";
 			while ($row = mysql_fetch_array($result)) {
 			print '<option';
-			print ' value ="' . $row['id'] . '">' . $row['name'] . '</option>' ."\n";
+			print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
 			} 
 		} else { // Couldn't get the information.
 			print '<p id="clickme" class="error">Could not retrieve the object because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
@@ -3200,13 +3379,13 @@ function listrelations($dbc)
 		
 			// Print the record:
 			print "<tr onClick=\"document.location.href='index.php?command=viewrelation&relationid={$row['id']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['id']}</td>\n";
-			print "<td>{$row['name']}</td>\n";
-			print "<td>" . substr( $row['description'], 0, 80 ) . "\n";
-			print "<td>{$row['timestamp']}\n";
+			print "<td>" . htmlspecialchars($row['id']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['name']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['description']), 0, 80 ) . "\n";
+			print "<td>" . htmlspecialchars($row['timestamp']) . "\n";
 			print "</td>\n";			
 			print "<td>\n";
-			print "<form action=\"index.php?command=editrelation&relationid=" . $row['id'] . "\" method=\"post\">\n";
+			print "<form action=\"index.php?command=editrelation&relationid=" . htmlspecialchars($row['id']) . "\" method=\"post\">\n";
 			print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
 			print "</form>\n";
 			print "</td>\n";			
@@ -3269,11 +3448,11 @@ function viewrelation($dbc)
 			print "<th class=\"object\" colspan=\"3\">Relation</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name : </td>\n";
-			print "<td class=\"object\">" . htmlentities($row['relationname']) . "</td>\n";
+			print "<td class=\"object\">" . htmlspecialchars($row['relationname']) . "</td>\n";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description : </td>\n";
-			print "<td class=\"object\">" . nl2br(htmlentities($row['relationdescription'])) . "</td>\n";
+			print "<td class=\"object\">" . nl2br(htmlspecialchars($row['relationdescription'])) . "</td>\n";
 			print "</tr>\n";
 			print "</table>\n";
 		} else { // Couldn't get the information.
@@ -3360,14 +3539,14 @@ function editrelation($dbc)
 			print "</th>\n";
 			print "<tr>\n";
 			print "<td class=\"object\" width=\"120px\">Name :</td>\n";
-			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlentities($row['relationname']) . "\" /></td>";
+			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlspecialchars($row['relationname']) . "\" /></td>";
 			print "</tr>\n";
 			print "<tr>\n";
 			print "<td class=\"object\">Description :</td>\n";
 			// Check how many lines in the string and adjust the textarea accordingly
-			$lines=explode("\n",htmlentities($row['relationdescription']));
+			$lines=explode("\n",htmlspecialchars($row['relationdescription']));
 			$rowcount = count($lines);
-			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlentities($row['relationdescription']) . "</textarea></td>\n";
+			print "<td class=\"object\"><textarea class=\"field\" name=\"description\" rows=\"$rowcount\">" . htmlspecialchars($row['relationdescription']) . "</textarea></td>\n";
 			print "</tr>\n";
 			print "</table>\n";
 			print '<input type="hidden" name="relationid" value="' . $_GET['relationid'] . '" />';
@@ -3436,7 +3615,7 @@ function addrelation($dbc)
 			if (mysql_affected_rows($dbc) == 1){
 				// Print a message:
 				$usedid = mysql_insert_id();
-				print '<p id="fade" class="info">Relation has been saved with id=' . $usedid . '.</p>';
+				print '<p id="fade" class="info">Relation has been saved.</p>';
 			} else {
 				print '<p id="clickme" class="error">Could not store the relation because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
 			}
@@ -3638,7 +3817,7 @@ function reports($dbc) {
 	$query = "SELECT type.name as typename, type.id as typeid FROM type ORDER BY type.name";
 	if ($result = mysql_query($query, $dbc)) {
 		while ($row = mysql_fetch_array($result)) {	
-			print "<input type=\"checkbox\" name=\"typeid{$row['typeid']}\" value=\"{$row['typeid']}\"/>{$row['typename']}<br/>\n";
+			print "<input type=\"checkbox\" name=\"typeid" . htmlspecialchars($row['typeid']) . "\" value=\"" . htmlspecialchars($row['typeid']) . "\"/>" . htmlspecialchars($row['typename']) . "<br/>\n";
 		}
 	}
 	print "<p><input class=\"createreport\" type=\"submit\" value=\"Create Report\" /></p>\n";
@@ -3651,7 +3830,7 @@ function reports($dbc) {
 	$query = "SELECT property.name as propertyname, property.id as propertyid FROM property ORDER BY property.name";
 	if ($result = mysql_query($query, $dbc)) {
 		while ($row = mysql_fetch_array($result)) {	
-			print "<input type=\"checkbox\" name=\"propertyid{$row['propertyid']}\" value=\"{$row['propertyid']}\"/>{$row['propertyname']}<br/>\n";
+			print "<input type=\"checkbox\" name=\"propertyid" . htmlspecialchars($row['propertyid']) . "\" value=\"" . htmlspecialchars($row['propertyid']) . "\"/>" . htmlspecialchars($row['propertyname']) . "<br/>\n";
 		}
 	}
 	print "<p><input class=\"createreport\" type=\"submit\" value=\"Create Report\" /></p>\n";
@@ -3677,7 +3856,7 @@ function reports($dbc) {
 	$query = "SELECT property_class.name as propertyclassname, property_class.id as propertyclassid FROM property_class ORDER BY property_class.name";
 	if ($result = mysql_query($query, $dbc)) {
 		while ($row = mysql_fetch_array($result)) {	
-			print "<input type=\"checkbox\" name=\"propertyclassid{$row['propertyclassid']}\" value=\"{$row['propertyclassid']}\"/>{$row['propertyclassname']}<br/>\n";
+			print "<input type=\"checkbox\" name=\"propertyclassid" . htmlspecialchars($row['propertyclassid']) . "\" value=\"" . htmlspecialchars($row['propertyclassid']) . "\"/>" . htmlspecialchars($row['propertyclassname']) . "<br/>\n";
 		}
 	}
 	print "<p><input class=\"createreport\" type=\"submit\" value=\"Create Report\" /></p>\n";
@@ -3749,17 +3928,12 @@ function typereport($dbc)
 		// Retrieve the returned records:
 		while ($row = mysql_fetch_array($result)) {
 			// Print the record:
-			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid={$row['objectid']}';\" style=\"cursor:pointer;\">\n";
+			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid']) . "';\" style=\"cursor:pointer;\">\n";
 			print "<td>{$row['objectid']}</td>\n";
 			print "<td>{$row['objectname']}</td>\n";
-			print "<td>" . substr( $row['objectdescription'], 0, 60 ) . "</td>\n";
-			print "<td>" . substr( $row['typename'], 0, 25 ) . "</td>\n";
-			print "<td>{$row['objecttimestamp']}\n";
-			print "</td>\n";			
-			//print "<td>\n";
-			//print "<form action=\"index.php?command=editobject&objectid=" . $row['objectid'] . "\" method=\"post\">\n";
-			//print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
-			//print "</form>\n";
+			print "<td>" . substr( htmlspecialchars($row['objectdescription']), 0, 60 ) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['typename']), 0, 25 ) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objecttimestamp']) . "\n";
 			print "</td>\n";			
 			print "</tr>\n";
 		} // End of while loop.
@@ -3837,17 +4011,12 @@ function propertyreport($dbc)
 		// Retrieve the returned records:
 		while ($row = mysql_fetch_array($result)) {
 			// Print the record:
-			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid={$row['objectid']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['propertyname']}</td>\n";
-			print "<td>{$row['objectname']}</td>\n";
-			print "<td>" . substr( $row['objectdescription'], 0, 60 ) . "</td>\n";
-			print "<td>" . substr( $row['typename'], 0, 25 ) . "</td>\n";
-			print "<td>{$row['objecttimestamp']}\n";
-			print "</td>\n";			
-			//print "<td>\n";
-			//print "<form action=\"index.php?command=editobject&objectid=" . $row['objectid'] . "\" method=\"post\">\n";
-			//print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
-			//print "</form>\n";
+			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid']) . "';\" style=\"cursor:pointer;\">\n";
+			print "<td>" . htmlspecialchars($row['propertyname']) ."</td>\n";
+			print "<td>" . htmlspecialchars($row['objectname']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['objectdescription']), 0, 60 ) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['typename']), 0, 25 ) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objecttimestamp']) . "\n";
 			print "</td>\n";			
 			print "</tr>\n";
 		} // End of while loop.
@@ -3932,17 +4101,12 @@ function propertyallreport($dbc)
 		// Retrieve the returned records:
 		while ($row = mysql_fetch_array($result)) {
 			// Print the record:
-			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid={$row['objectpropertyobjectid']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['propertyname']}</td>\n";
-			print "<td>{$row['objectname']}</td>\n";
-			print "<td>" . substr( $row['objectdescription'], 0, 60 ) . "</td>\n";
-			print "<td>" . substr( $row['typename'], 0, 25 ) . "</td>\n";
-			print "<td>{$row['objecttimestamp']}\n";
-			print "</td>\n";			
-			//print "<td>\n";
-			//print "<form action=\"index.php?command=editobject&objectid=" . $row['objectid'] . "\" method=\"post\">\n";
-			//print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
-			//print "</form>\n";
+			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectpropertyobjectid']) ."';\" style=\"cursor:pointer;\">\n";
+			print "<td>" . htmlspecialchars($row['propertyname']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objectname']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['objectdescription']), 0, 60 ) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['typename']), 0, 25 ) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objecttimestamp']) . "\n";
 			print "</td>\n";			
 			print "</tr>\n";
 		} // End of while loop.
@@ -4023,17 +4187,12 @@ function propertyclassreport($dbc)
 		while ($row = mysql_fetch_array($result)) {
 		
 			// Print the record:
-			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid={$row['objectid']}';\" style=\"cursor:pointer;\">\n";
-			print "<td>{$row['propertyname']}</td>\n";
-			print "<td>{$row['objectname']}</td>\n";
-			print "<td>" . substr( $row['objectdescription'], 0, 60 ) . "</td>\n";
-			print "<td>" . substr( $row['typename'], 0, 25 ) . "</td>\n";
-			print "<td>{$row['objecttimestamp']}\n";
-			print "</td>\n";			
-			//print "<td>\n";
-			//print "<form action=\"index.php?command=editobject&objectid=" . $row['objectid'] . "\" method=\"post\">\n";
-			//print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
-			//print "</form>\n";
+			print "<tr onClick=\"document.location.href='index.php?command=viewobject&objectid=" . htmlspecialchars($row['objectid']) . "';\" style=\"cursor:pointer;\">\n";
+			print "<td>" . htmlspecialchars($row['propertyname']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objectname']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['objectdescription']), 0, 60 ) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['typename']), 0, 25 ) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['objecttimestamp']) . "\n";
 			print "</td>\n";			
 			print "</tr>\n";
 		} // End of while loop.
@@ -4043,6 +4202,630 @@ function propertyclassreport($dbc)
 	{ // Query didn't run.
 		print '<p id="clickme" class="error">Could not retrieve the data because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
 	} // End of query IF.
+}
+
+/*******************************************************************/
+/* function                                                        */
+/*   listusers                                                      */
+/*******************************************************************/
+//
+// Description:
+//   ?
+// Inputs: 
+//   function:
+//	   ():
+//       ?
+//   POST:
+//	   ?
+//   GET:
+//     ?
+//
+// Output:
+//   return:
+//     ?
+//   HTML:
+//     ?
+//   MYSQL:
+//     ?
+//   GET:
+//     ?
+//   POST:
+//     ?
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   ?
+/********************************************************************/
+function listusers($dbc)
+{
+	//Sort order
+	if ( isset($_GET['sort']) ) { 
+		switch ( $_GET['sort'] ) {
+			case "userid":
+			case "userlogin":
+			case "username":
+			case "usergroupname":
+			case "usertimestamp":
+				$sort = $_GET['sort'];
+				break;
+			default:
+				$sort = "userid";
+		}
+	} else {
+		$sort = "userid";
+	}
+	//Search order
+	if ( isset($_POST['search']) ) {
+		$search	= "AND ( name LIKE \"%" . $_POST['search']. "%\" OR description LIKE \"%" . $_POST['search'] . "%\" ) ";
+	} else {
+		$search = "";
+	}
+
+		// Define the query...
+	$query = "SELECT user.id as userid, user.login as userlogin, user.name as username, user.timestamp as usertimestamp, usergroup.name as usergroupname FROM user " .
+				"JOIN usergroup ON (usergroup.id = user.group_id) WHERE user.deleted = 0 $search ORDER BY $sort";
+
+	// Run the query:
+	if ($result = mysql_query($query, $dbc)) {
+	
+		print '<table>';
+		print "\n<tr>\n";
+		print "<th><a href=\"index.php?command=listusers&sort=userid\">Id</a></th>\n";
+		print "<th><a href=\"index.php?command=listusers&sort=userlogin\">Login</a></th>\n";
+		print "<th><a href=\"index.php?command=listusers&sort=username\">Full Name</a></th>\n";	
+		print "<th><a href=\"index.php?command=listusers&sort=usergroupname\">User Group</a></th>\n";	
+		print "<th><a href=\"index.php?command=listusers&sort=usertimestamp\">Create Date</a></th>\n";
+		print "<th></th>\n";
+		print "</tr>\n";
+
+		// Retrieve the returned records:
+		while ($row = mysql_fetch_array($result)) {
+			$rows = mysql_num_rows($result);
+			// Print the record:
+			print "<tr onClick=\"document.location.href='index.php?command=edituser&userid={$row['userid']}';\" style=\"cursor:pointer;\">\n";
+			print "<td>" . htmlspecialchars($row['userid']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['userlogin']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['username']), 0, 80 ) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['usergroupname']), 0, 80 ) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['usertimestamp']) . "\n";
+			print "</td>\n";			
+			print "<td>\n";
+			print "<form action=\"index.php?command=edituser&userid=" . htmlspecialchars($row['userid']) . "\" method=\"post\">\n";
+			print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
+			print "</form>\n";
+			print "</td>\n";			
+			print "</tr>\n";
+		} // End of while loop.
+		print "</table>\n";
+		print "<div class=\"result\">$rows rows returned</div>\n";
+	} else 
+	{ // Query didn't run.
+		print '<p id="clickme" class="error">Could not retrieve the data because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+	} // End of query IF.
+}
+
+/*******************************************************************/
+/* function                                                        */
+/*   adduser                                                       */
+/*******************************************************************/
+//
+// Description:
+//   Add user into database, ask password and group
+// Inputs: 
+//   function:
+//	   ():
+//       $dbc: database conection
+//   POST:
+//	   ?
+//   GET:
+//     ?
+//
+// Output:
+//   return:
+//     ?
+//   HTML:
+//     ?
+//   MYSQL:
+//     ?
+//   GET:
+//     ?
+//   POST:
+//     ?
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   ?
+/********************************************************************/
+function adduser($dbc)
+{
+	$error = false;
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+	{ // Handle the form
+		if ( !empty($_POST['login']) && !empty($_POST['name']) && !empty($_POST['group_id']) && !empty($_POST['password']) ) {
+
+						// Prepare the values for storing:
+			$login = mysql_real_escape_string(trim(strip_tags($_POST['login'])), $dbc);
+			$name = mysql_real_escape_string(trim(strip_tags($_POST['name'])), $dbc);
+			$groupid = mysql_real_escape_string(trim(strip_tags($_POST['group_id'])), $dbc);
+			$password = md5(mysql_real_escape_string(trim(strip_tags($_POST['password'])), $dbc));
+			$query = "INSERT INTO user (login, name, group_id, password) VALUES ('$login', '$name', '$groupid', '$password')";
+			$result = mysql_query($query, $dbc);
+			if (mysql_affected_rows($dbc) == 1){
+				// Print a message:
+				$usedid = mysql_insert_id();
+				print '<p id="fade" class="info">User has been saved with id=' . $usedid . '.</p>';
+			} else {
+				print '<p id="clickme" class="error">Could not store the user because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+			}
+			
+		} else { // Failed to enter data.
+			print '<p id="clickme" class="error">Please enter a login and name and select a group!</p>';
+			$error=true;
+		}
+		listusers($dbc);
+	} elseif (!$error)
+	{	// Show the form
+		print "<form action=\"index.php?command=adduser\" method=\"post\">\n";
+		print "<p><label>Login <input type=\"text\" name=\"login\" /></label></p>";
+		print "<p><label>Full Name <textarea name=\"name\" rows=\"2\" cols=\"70\"></textarea></label></p>";
+		print "<p><label>Password <input type=\"password\" name=\"password\" /></label></p>";
+				// Define query for group
+		$query = "SELECT  id, name FROM usergroup ORDER BY name ASC";
+		if ($result = mysql_query($query, $dbc)) { // Run the query.
+			print '<p>User Group<select class="field" name="group_id">' . "\n";
+			while ($row = mysql_fetch_array($result)) {
+			print '<option';
+			print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
+			} 
+		} else { // Couldn't get the information.
+			print '<p id="clickme" class="error">Could not retrieve the user because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+		}
+		print "</select>\n";
+		print "<p><input class=\"save\" type=\"submit\" name=\"submit\" value=\"Save\" /></p>\n";
+		print "</form>\n";
+	}
+}
+
+/*******************************************************************/
+/* function                                                        */
+/*   edituser                                                      */
+/*******************************************************************/
+//
+// Description:
+//   Edit user name, login, user group and password
+// Inputs: 
+//   function:
+//	   ():
+//       ?
+//   POST:
+//	   ?
+//   GET:
+//     ?
+//
+// Output:
+//   return:
+//     ?
+//   HTML:
+//     ?
+//   MYSQL:
+//     ?
+//   GET:
+//     ?
+//   POST:
+//     ?
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   ?
+/********************************************************************/
+function edituser($dbc)
+{
+	$error = false;
+	if (isset($_POST['userid']) && is_numeric($_POST['userid']) && ($_POST['userid'] > 0)) { // Handle the form.
+
+		// Validate and secure the form data:
+		if ( !empty($_POST['login']) && !empty($_POST['name']) && !empty($_POST['groupid']) ) {
+
+						// Prepare the values for storing:
+			$login = mysql_real_escape_string(trim(strip_tags($_POST['login'])), $dbc);
+			$name = mysql_real_escape_string(trim(strip_tags($_POST['name'])), $dbc);
+			$groupid = mysql_real_escape_string(trim(strip_tags($_POST['groupid'])), $dbc);
+			
+			// Define the query.
+			if(!empty($_POST['password'])) {
+				$password = md5(mysql_real_escape_string(trim(strip_tags($_POST['password'])), $dbc));
+				$query = "UPDATE user SET login='$login', name='$name', group_id='$groupid', password='$password'  WHERE id={$_POST['userid']}";
+			} else {
+				$query = "UPDATE user SET login='$login', name='$name', group_id='$groupid'  WHERE id={$_POST['userid']}";
+			}
+			if ($result = mysql_query($query, $dbc)) {
+				print '<p id="fade" class="info">The user has been updated.</p>';
+			} else {
+				print '<p class="error">Could not update the user because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+				$error = true;
+			}	
+		} // No problem!
+	}
+
+	if ( isset($_GET['userid']) && is_numeric($_GET['userid']) && ($_GET['userid'] > 0) ) { // Display the entry in a form:
+
+		$query = "SELECT user.id as userid, user.login as userlogin, user.name as username, user.timestamp as usertimestamp, usergroup.name as usergroupname, usergroup.id as usergroupid FROM user " .
+				"JOIN usergroup ON (usergroup.id = user.group_id) WHERE user.id = " . $_GET['userid'];
+		if ($result = mysql_query($query, $dbc)) { // Run the query.
+		
+			$row = mysql_fetch_array($result); // Retrieve the information.
+			$userid = htmlspecialchars($row['userid']);
+			$usergroupid = htmlspecialchars($row['usergroupid']);
+			// Make the form:
+			print "<form action=\"index.php?command=edituser&userid=" . $_GET['userid'] . "\" method=\"post\">";
+			print "<table>";
+			print "<th colspan=\"2\" class=\"object\">";
+			print "User";
+			print "<input class=\"save\" type=\"submit\" name=\"submit\" value=\"Save User\"/>\n";
+			print "</th>\n";
+			print "<tr>\n";
+			print "<td class=\"object\" width=\"120px\">Login :</td>\n";
+			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"login\" value=\"" . htmlspecialchars($row['userlogin']) . "\" /></td>";
+			print "</tr>\n";
+			print "<tr>\n";
+			print "<td class=\"object\">Full Name :</td>\n";
+			print "<td class=\"object\"><input class=\"field\" type=\"text\" name=\"name\" value=\"" . htmlspecialchars($row['username']) . "\" /></td>\n";
+			print "</tr>\n";
+			print "<tr>\n";
+			print "<td class=\"object\">Password :</td>\n";
+			print "<td class=\"object\"><input class=\"field\" type=\"password\" name=\"password\" value=\"\" /></td>\n";
+			print "</tr>\n";
+			print "<tr>\n";
+			// Define query for group
+			$query = "SELECT  id, name FROM usergroup ORDER BY name ASC";
+			if ($result = mysql_query($query, $dbc)) { // Run the query.
+				print "<tr>\n";
+				print "<td class=\"object\">User Group :</td>\n";
+				print "<td class=\"object\"><select width=\"100px\" class=\"field\" name=\"groupid\">\n";
+				while ($row = mysql_fetch_array($result)) {
+				print '<option';
+				if ( htmlspecialchars($row['id']) == $usergroupid ) {
+					print ' selected="true"';
+			}
+				print ' value ="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>' ."\n";
+				} 
+			} else { // Couldn't get the information.
+				print '<p id="clickme" class="error">Could not retrieve the user group because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+			}
+			print "</select>\n";
+			print "</td>\n";
+			print "</tr>\n";
+
+			print "</table>\n";
+			print '<input type="hidden" name="userid" value="' . $_GET['userid'] . '" />';
+			print '</form>';
+	
+		
+		} else { // Couldn't get the information.
+			print '<p id="clickme" class="error">Could not retrieve the user because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+		}
+	} else { // No ID set.
+		print '<p id="clickme" class="error">This page has been accessed in error.</p>';
+	} // End of main IF.
+}
+
+
+/*******************************************************************/
+/* function                                                        */
+/*   listgroups                                                    */
+/*******************************************************************/
+//
+// Description:
+//   List all user groups from database.
+// Inputs: 
+//   function:
+//	   ():
+//       ?
+//   POST:
+//	   ?
+//   GET:
+//     ?
+//
+// Output:
+//   return:
+//     ?
+//   HTML:
+//     ?
+//   MYSQL:
+//     ?
+//   GET:
+//     ?
+//   POST:
+//     ?
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   ?
+/********************************************************************/
+function listgroups($dbc)
+{
+	//Sort order
+	if ( isset($_GET['sort']) ) { 
+		switch ( $_GET['sort'] ) {
+			case "groupid":
+			case "groupname":
+			case "groupdescription":
+			case "grouptimestamp":
+				$sort = $_GET['sort'];
+				break;
+			default:
+				$sort = "groupid";
+		}
+	} else {
+		$sort = "groupid";
+	}
+	//Search order
+	if ( isset($_POST['search']) ) {
+		$search	= "AND ( name LIKE \"%" . $_POST['search']. "%\" OR description LIKE \"%" . $_POST['search'] . "%\" ) ";
+	} else {
+		$search = "";
+	}
+
+		// Define the query...
+	$query = "SELECT usergroup.id as groupid, usergroup.name as groupname,usergroup.description as groupdescription, usergroup.timestamp as grouptimestamp FROM usergroup WHERE usergroup.deleted = 0 $search ORDER BY $sort";
+
+	// Run the query:
+	if ($result = mysql_query($query, $dbc)) {
+	
+		print '<table>';
+		print "\n<tr>\n";
+		print "<th><a href=\"index.php?command=listusers&sort=groupid\">Id</a></th>\n";
+		print "<th><a href=\"index.php?command=listusers&sort=groupname\">Group Name</a></th>\n";	
+		print "<th><a href=\"index.php?command=listusers&sort=groupdescription\">Group Description</a></th>\n";	
+		print "<th><a href=\"index.php?command=listusers&sort=usertimestamp\">Create Date</a></th>\n";
+		print "<th></th>\n";
+		print "</tr>\n";
+
+		// Retrieve the returned records:
+		$rows = 0;
+		while ($row = mysql_fetch_array($result)) {
+			$rows = mysql_num_rows($result);
+			// Print the record:
+			print "<tr onClick=\"document.location.href='index.php?command=editgroup&groupid={$row['groupid']}';\" style=\"cursor:pointer;\">\n";
+			print "<td>" . htmlspecialchars($row['groupid']) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['groupname']) . "</td>\n";
+			print "<td>" . substr( htmlspecialchars($row['groupdescription']), 0, 80 ) . "</td>\n";
+			print "<td>" . htmlspecialchars($row['grouptimestamp']) . "\n";
+			print "</td>\n";			
+			print "<td>\n";
+			print "<form action=\"index.php?command=editgroup&groupid=" . htmlspecialchars($row['groupid']) . "\" method=\"post\">\n";
+			print "<input class=\"edit\" type=\"submit\" name=\"submit\" value=\"Edit\" />\n";
+			print "</form>\n";
+			print "</td>\n";			
+			print "</tr>\n";
+		} // End of while loop.
+		print "</table>\n";
+		print "<div class=\"result\">$rows rows returned</div>\n";
+	} else 
+	{ // Query didn't run.
+		print '<p id="clickme" class="error">Could not retrieve the data because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+	} // End of query IF.
+}
+
+/*******************************************************************/
+/* function                                                        */
+/*   addgroup                                                      */
+/*******************************************************************/
+//
+// Description:
+//   Add group into database with selected permissions
+// Inputs: 
+//   function:
+//	   ():
+//       $dbc: database conection
+//   POST:
+//	   ?
+//   GET:
+//     ?
+//
+// Output:
+//   return:
+//     ?
+//   HTML:
+//     ?
+//   MYSQL:
+//     ?
+//   GET:
+//     ?
+//   POST:
+//     ?
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   ?
+/********************************************************************/
+function addgroup($dbc)
+{
+	$error = false;
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+	{ // Handle the form
+		if ( !empty($_POST['name']) && !empty($_POST['description']) ) {
+
+			// Prepare the values for storing:
+			$name = mysql_real_escape_string(trim(strip_tags($_POST['name'])), $dbc);
+			$description = mysql_real_escape_string(trim(strip_tags($_POST['description'])), $dbc);
+			$query = "INSERT INTO usergroup (name, description) VALUES ('$name', '$description')";
+			$result = mysql_query($query, $dbc);
+			if (mysql_affected_rows($dbc) == 1){
+				// Print a message:
+				$usedid = mysql_insert_id();
+
+			} else {
+				$error = true;
+			}
+			
+		} else { // Failed to enter data.
+			print '<p id="clickme" class="error">Please enter a name and description!</p>';
+			$error=true;
+		}
+		// Insert the permission into the permissions database
+		if(!$error) {
+			foreach($_POST as $key => $value) {
+				if (is_numeric($key) and is_numeric($value)) {
+					$permid = mysql_real_escape_string($key);
+					$permset = mysql_real_escape_string($value);
+					$query = "INSERT INTO usergroup_permissions(group_id, permission_id, value) VALUES ('$usedid', '$permid', '$permset')";
+					$result = mysql_query($query, $dbc);
+					if (!mysql_affected_rows($dbc) == 1){
+						$error = true;
+					}
+				}
+			}
+		}
+		if($error) {
+			// Problem
+		} else {
+			// OK
+			listgroups($dbc);
+		}
+	} elseif (!$error)
+	{	// Show the form
+		print "<form action=\"index.php?command=addgroup\" method=\"post\">\n";
+		print "<p>Group Name <input type=\"text\" name=\"name\" /></p>";
+		print "<p>Group Description <input type=\"text\" size=\"50\" name=\"description\"></p>";
+				// Define query for permissions
+		$query = "SELECT  id, name, description FROM permissions ORDER BY displayorder ASC";
+		if ($result = mysql_query($query, $dbc)) { // Run the query.
+			print "<table><th colspan=\"3\">Group permissions:</th>\n";
+			while ($row = mysql_fetch_array($result)) {
+				print "<tr><td>" . $row['description'] . "</td>\n";
+				print "<td><input type=\"radio\" name=\"" . $row['id'] . "\" value=\"1\" />Allow</td>";
+				print "<td><input type=\"radio\" name=\"" . $row['id'] . "\" value=\"0\" checked=\"checked\" />Deny</td>";
+				print "</tr>\n";
+			} 
+			print "</table>\n";
+		} else { // Couldn't get the information.
+			print '<p id="clickme" class="error">Could not retrieve the user because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+		}
+		print "<p><input class=\"save\" type=\"submit\" name=\"submit\" value=\"Save\" /></p>\n";
+		print "</form>\n";
+	}
+}
+
+/*******************************************************************/
+/* function                                                        */
+/*   editgroup                                                     */
+/*******************************************************************/
+//
+// Description:
+//   Edit group permissions
+// Inputs: 
+//   function:
+//	   ():
+//       $dbc: database conection
+//   POST:
+//	   ?
+//   GET:
+//     ?
+//
+// Output:
+//   return:
+//     ?
+//   HTML:
+//     ?
+//   MYSQL:
+//     ?
+//   GET:
+//     ?
+//   POST:
+//     ?
+//
+// Security checks:
+//   ?
+//
+// Security risk:
+//   ?
+/********************************************************************/
+function editgroup($dbc)
+{
+	$error = false;
+	if (isset($_POST['groupid']) && is_numeric($_POST['groupid']) && ($_POST['groupid'] > 0)) 
+	{ // Handle the form
+		if ( !empty($_POST['name']) && !empty($_POST['description']) &&  !empty($_POST['groupid'])) {
+
+			// Prepare the values for updating:
+			$name = mysql_real_escape_string(trim(strip_tags($_POST['name'])), $dbc);
+			$description = mysql_real_escape_string(trim(strip_tags($_POST['description'])), $dbc);
+
+			$query = "UPDATE usergroup SET name='$name', description='$description' WHERE id={$_POST['groupid']}";
+			if (!$result = mysql_query($query, $dbc)){
+				$error = true;
+			}
+		} else { // Failed to enter data.
+			print '<p id="clickme" class="error">Please enter a name and description!</p>';
+			$error=true;
+		}
+		// Insert the permission into the permissions database
+		if(!$error) {
+			foreach($_POST as $key => $value) {
+				if (is_numeric($key) and is_numeric($value)) {
+					$permid = mysql_real_escape_string($key);
+					$permset = mysql_real_escape_string($value);
+					$query = "UPDATE usergroup_permissions SET value=$permset WHERE group_id = {$_POST['groupid']} AND permission_id = $permid";
+					if (!$result = mysql_query($query, $dbc)){
+						$error = true;
+					}
+				}
+			}
+		}
+		if($error) {
+			// Problem
+			print '<p id="clickme" class="error">Could not retrieve the permissions because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+		} else {
+			// OK
+			listgroups($dbc);
+		}
+	} elseif (!$error)
+	{	
+		if ( isset($_GET['groupid']) && is_numeric($_GET['groupid']) && ($_GET['groupid'] > 0) ) { // Display the entry in a form:
+		$query = "SELECT name, description FROM usergroup WHERE id = {$_GET['groupid']}";
+		if ($result = mysql_query($query , $dbc)) {
+			$row = mysql_fetch_array($result);
+			print "<form action=\"index.php?command=editgroup&groupid=" . $_GET['groupid'] . "\" method=\"post\">\n";
+			print "<p>Group Name <input type=\"text\" name=\"name\" value=\"" . $row['name'] . "\" /></p>";
+			print "<p>Group Description <input type=\"text\" size=\"50\" name=\"description\" value=\"" . $row['description'] . "\"></p>";
+			print "<input type=\"hidden\" name=\"groupid\" value=\"" . $_GET['groupid'] . "\" /></p>";
+				// Define query for permissions
+			$query = "SELECT  permissions.id as permissionsid, permissions.name as permissionsname, permissions.description as permissionsdescription, usergroup_permissions.value as usergrouppermissionsvalue FROM permissions JOIN usergroup_permissions ON usergroup_permissions.permission_id = permissions.id WHERE usergroup_permissions.group_id = {$_GET['groupid']} ORDER BY permissions.displayorder ASC";
+			if ($result = mysql_query($query, $dbc)) { // Run the query.
+				print "<table><th colspan=\"3\">Group permissions:</th>\n";
+				while ($row = mysql_fetch_array($result)) {
+					print "<tr><td>" . $row['permissionsdescription'] . "</td>\n";
+					if ($row['usergrouppermissionsvalue'] == 1){
+						$allowchecked = "checked=\"checked\"";
+						$denychecked = "";
+					} else {
+						$allowchecked = "";
+						$denychecked = "checked=\"checked\"";
+					};
+					print "<td><input type=\"radio\" name=\"" . $row['permissionsid'] . "\" value=\"1\" $allowchecked />Allow</td>";
+					print "<td><input type=\"radio\" name=\"" . $row['permissionsid'] . "\" value=\"0\" $denychecked />Deny</td>";
+					print "</tr>\n";
+				} 
+				print "</table>\n";
+			} else { // Couldn't get the information.
+				print '<p id="clickme" class="error">Could not retrieve the permissions because:<br />' . mysql_error($dbc) . '. The query being run was: ' . $query . '</p>';
+			}
+			print "<p><input class=\"save\" type=\"submit\" name=\"submit\" value=\"Save\" /></p>\n";
+			print "</form>\n";
+			}
+		}
+	}
 }
 
 ?>

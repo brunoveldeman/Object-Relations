@@ -1,22 +1,7 @@
--- Host: localhost
--- Generation Time: Sep 01, 2012 at 01:32 PM
--- Server version: 5.5.24-log
--- PHP Version: 5.4.3
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
---
--- Database: `or`
---
-CREATE DATABASE `or` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-USE `or`;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `object`
---
 
 CREATE TABLE IF NOT EXISTS `object` (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id',
@@ -26,13 +11,8 @@ CREATE TABLE IF NOT EXISTS `object` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type_id` int(11) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=58 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `object_property`
---
 
 CREATE TABLE IF NOT EXISTS `object_property` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -42,13 +22,8 @@ CREATE TABLE IF NOT EXISTS `object_property` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`,`object_id`,`property_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=135 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `object_property_data_binary`
---
 
 CREATE TABLE IF NOT EXISTS `object_property_data_binary` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -58,26 +33,18 @@ CREATE TABLE IF NOT EXISTS `object_property_data_binary` (
   `filetype` varchar(250) COLLATE utf8_bin NOT NULL,
   `data` longblob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `object_property_data_text`
---
 
 CREATE TABLE IF NOT EXISTS `object_property_data_text` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `object_property_id` int(11) NOT NULL,
   `data` text COLLATE utf8_bin NOT NULL,
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=27 ;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `object_property_id` (`object_property_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `object_relation`
---
 
 CREATE TABLE IF NOT EXISTS `object_relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -86,13 +53,18 @@ CREATE TABLE IF NOT EXISTS `object_relation` (
   `object2_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `RELATION` (`relation_id`,`object1_id`,`object2_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `property`
---
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(25) COLLATE utf8_bin NOT NULL,
+  `description` varchar(250) COLLATE utf8_bin NOT NULL,
+  `displayorder` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
 
 CREATE TABLE IF NOT EXISTS `property` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -103,13 +75,8 @@ CREATE TABLE IF NOT EXISTS `property` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted` double NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `property_class`
---
 
 CREATE TABLE IF NOT EXISTS `property_class` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -118,13 +85,8 @@ CREATE TABLE IF NOT EXISTS `property_class` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `relation`
---
 
 CREATE TABLE IF NOT EXISTS `relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -135,13 +97,8 @@ CREATE TABLE IF NOT EXISTS `relation` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `type`
---
 
 CREATE TABLE IF NOT EXISTS `type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -150,19 +107,38 @@ CREATE TABLE IF NOT EXISTS `type` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
 
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(25) COLLATE utf8_bin NOT NULL,
+  `name` varchar(250) COLLATE utf8_bin NOT NULL,
+  `password` varchar(250) COLLATE utf8_bin NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `login` (`login`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `usergroup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(25) COLLATE utf8_bin NOT NULL,
   `description` varchar(250) COLLATE utf8_bin NOT NULL,
-  `password` varchar(32) COLLATE utf8_bin NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `usergroup_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  `value` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+

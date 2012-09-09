@@ -1,9 +1,26 @@
 <?php // footer.html
+/* Legal Stuff
+
+	This file is part of Object relations.
+
+    Object Relations is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Object relations is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Object Relations.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 if (isset($auth) && $auth) {
 	print "<p class=\"username\">Logged in as '$authname'</p>";
 } else {
-	print "<hr /><p>Not logged in</p>";
+	print "<p class=\"username\">Not logged in</p>";
 }
 
 ?>
@@ -24,6 +41,13 @@ if (isset($auth) && $auth) {
     		$(".error").fadeOut("slow");
 		});
   </script>
-
+  	<script>
+  		var def = $.Deferred();
+		$(".alert").click(def.resolve);
+		setTimeout(def.resolve, 5000);
+		def.done(function() {
+    		$(".alert").fadeOut("slow");
+		});
+  </script>
 </body>
 </html>

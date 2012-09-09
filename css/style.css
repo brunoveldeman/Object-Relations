@@ -59,6 +59,7 @@ a:active
 	box-shadow: 10px 10px 5px #888888;
 	border: 2px solid black;
 	padding: 5px 0px 15px 0px;
+	border-radius: 10px;
 }
 
 #footer {
@@ -106,8 +107,6 @@ h1:after,h2:after,h3:after,h4:after,h5:after,h6:after,li:after{ content:"."; col
 
 li:after{ font-size:24px; }
 
-p { margin-top: 1em; } 
-
 /* Table styling */
 table {
 	width: 100%;	
@@ -123,6 +122,7 @@ th {
 	font-weight: normal;
 	font-size: 16px;
 	color: #049;
+	overflow:hidden;
 	background: #D0D0D0;
 }
 td {
@@ -131,6 +131,7 @@ td {
 	border: 1px solid black;
 	color: #669;
 	border-top: 1px solid #fff;
+	overflow: hidden;
 	vertical-align: top;
 }
 tbody tr:hover td
@@ -217,6 +218,26 @@ p.error:after
 	box-shadow: 10px 10px 5px #888888;
 }
 
+.alert
+{
+	font-size: 16px;
+	padding: 20px;
+	background: #FFDDDD;
+	color: #AA0000;
+	border: 5px solid #AA0000;
+	position:fixed;
+	top:30%;
+	width:60%;
+	left:20%;
+	cursor:default;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:center;
+/* 	margin-left:auto;
+	margin-right:auto; */
+	box-shadow: 10px 10px 5px #888888;
+}
+
 #fade{
   	opacity:100; 
 }
@@ -239,6 +260,7 @@ p.error:after
   	text-align:center;
   	margin-left:auto;
 	margin-right:auto;
+	margin-top:15px;
 }
 
 .note
@@ -380,7 +402,40 @@ input.searchbutton
 	overflow:hidden;
 	border-radius:0px;
   	text-align:right;
+ 	margin-left:10px;
+	margin-right:10px;
+	box-shadow: 10px 10px 5px #888888;
+}
+
+.login
+{
+	font-size: 16px;
+	padding: 20px;
+	background: #DDDDFF;
+	color: #4444DD;
+	border: 2px solid #FF8C00;
+	cursor:default;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:right;
  	margin-left:auto;
 	margin-right:auto;
 	box-shadow: 10px 10px 5px #888888;
+}
+
+.loginbutton
+{
+	font-size: 14px;
+	padding: 2px;
+	background: #4444DD;
+	color: #DDDDFF;
+	border: 2px solid #FF8C00;
+	cursor:pointer;
+	overflow:hidden;
+	border-radius:10px;
+  	text-align:right;
+ 	margin-left:auto;
+	margin-right:auto;
+	box-shadow: 0px 0px 5px #888888;
+	float:left;
 }

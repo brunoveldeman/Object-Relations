@@ -30,7 +30,7 @@ function getappname() {
 }
 
 function getappver() {
-	$appver = "v0.0.2.1 Beta release";
+	$appver = "v0.0.2.2 Beta release";
 	return($appver);
 }
 

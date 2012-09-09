@@ -190,7 +190,7 @@ if(getperm('access')){
 		print "<p class=\"error\">Access denied</p>";
 	}
 } else {
-	print "<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />\n";
+	print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"></div>\n";
 	print "<script>window.setTimeout(function() { window.location.href = 'login.php'; }, 0);</script>\n";
 }
 

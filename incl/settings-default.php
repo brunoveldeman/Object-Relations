@@ -19,19 +19,61 @@
 */
 
 // Location to store files
+$targetfilepath = "filestore/";
+// Application name
+$appname = "Object Relations";
+// Application Version
+$appver = "v0.1.0.0 Ant";
+// Database servername
+$dbserver = "??????";
+// Database name
+$dbname = "??????";
+// Database user name
+$dbusername = "??????";
+// Database user password
+$dbuserpassword = "??????";
+// Debug mode (Set false for normal operation)
+$debugmode = false;
+
+// Getters for the above variables
 function getfilepath() {
-	$targetfilepath = "filestore/";
+	global $targetfilepath;
 	return($targetfilepath);
 }
 
 function getappname() {
-	$appname = "Object Relations";
+	global $appname;
 	return($appname);
 }
 
 function getappver() {
-	$appver = "v0.0.2.2 Beta release";
+	global $appver;
 	return($appver);
+}
+
+function getdbserver() {
+	global $dbserver;
+	return($dbserver);
+}
+
+function getdbname() {
+	global $dbname;
+	return($dbname);
+}
+
+function getdbusername() {
+	global $dbusername;
+	return($dbusername);
+}
+
+function getdbuserpassword() {
+	global $dbuserpassword;
+	return($dbuserpassword);
+}
+
+function getdebugmode() {
+	global $debugmode;
+	return($debugmode);
 }
 
 ?>

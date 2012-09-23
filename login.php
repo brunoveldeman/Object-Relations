@@ -16,8 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with Object Relations.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-include ('settings.php');
+// Include the settings
+include ('incl/settings.php');
 
 // Include the functions:
 include('incl/functions.php');
@@ -34,25 +34,27 @@ include('rend/header.html');
 if(isset($_POST['username']) && isset($_POST['password']) && $_POST['username'] <> "" && $_POST['password'] <> ""){
 	//Check user table for correct password
 	print "<div style=\"width:90%; margin: 0px auto;\"><div>\n";
-	$username = mysql_real_escape_string($_POST['username']);
-	$password = md5(mysql_real_escape_string($_POST['password']));
-	$query = "SELECT user.id AS userid, user.login AS username, usergroup.id AS usergroupid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"" . $username . "\" AND user.password = \"" . $password ."\" AND user.deleted = 0 LIMIT 1";
-	if($result = mysql_query($query, $dbc)){
-		$row = mysql_fetch_array($result);
-		if(mysql_num_rows($result) == 1) {
+	$username = mysqli_real_escape_string($dbc, $_POST['username']);
+	$password = md5(mysqli_real_escape_string($dbc, $_POST['password']));
+	$query = "SELECT user.id AS userid, user.login AS userlogin, user.name AS username, usergroup.id AS usergroupid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"" . $username . "\" AND user.password = \"" . $password ."\" AND user.deleted = 0 LIMIT 1";
+	if($result = mysqli_query($dbc,$query )){
+		$row = mysqli_fetch_assoc($result);
+		if(mysqli_num_rows($result) == 1) {
 			// Set the auth variables
 			setuserid($row['userid']);
 			setgroupid($row['usergroupid']);
-			setauthname($row['username']);
+			setauthname($row['userlogin']);
+			setusername($row['username']);
 			setauth(true);
 			// Set the session variables
 			$_SESSION['authname'] = getauthname();
 			$_SESSION['groupid'] = getgroupid();
 			$_SESSION['userid'] = getuserid();
-			// redirect to index.php after 2.5s
+			$_SESSION['start'] = time();
+			// redirect to index.php
 			print "<script>window.setTimeout(function() { window.location.href = 'index.php'; }, 0);</script>\n";
-			print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"><a href=\"index.php\">Click here if not redirected</a>\n";
-			print "</div>\n";
+			print "<div style=\"float:left;text-align:center;width:100%\"><a href=\"index.php\">Click here if not redirected</a></div>\n";
+			print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"</div>\n";
 		} else {
 			setauth(false);
 			loginpage($dbc);
@@ -70,6 +72,8 @@ if(isset($_POST['username']) && isset($_POST['password']) && $_POST['username'] 
 // Include the footer.
 include('rend/footer.html'); 
 
+mysqli_close($dbc); // Close the connection.
+
 function loginpage($dbc) {
 	// Show login screen form
 	print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"><br /><br /><br /><br /><br /><div style=\"width:300px\" class=\"login\">\n";
@@ -79,9 +83,9 @@ function loginpage($dbc) {
 	print "<div><input class=\"loginbutton\" type=\"submit\" name=\"submit\" value=\"Login\" /></div>\n";
 	print "</form>\n";
 	$query = "SELECT user.id AS userid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"anonymous\" AND user.password = \"" . md5("anonymous") . "\" AND user.deleted = 0 LIMIT 1";
-	if($result = mysql_query($query, $dbc)){
-		$row = mysql_fetch_array($result);
-		if(mysql_num_rows($result) == 1) {
+	if($result = mysqli_query( $dbc, $query)){
+		$row = mysqli_fetch_assoc($result);
+		if(mysqli_num_rows($result) == 1) {
 			print "<form action=\"login.php\" method=\"post\">\n";
 			print "<input type=\"hidden\" name=\"username\" value=\"anonymous\"/>\n";
 			print "<input type=\"hidden\" name=\"password\" value=\"anonymous\"/>\n";
@@ -91,5 +95,6 @@ function loginpage($dbc) {
 	}
 	print "</div><br /><br /><br /></div>\n";
 }
+
 
 ?>

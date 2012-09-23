@@ -26,71 +26,114 @@ $auth = false;
 $authname = "";
 $groupid = "";
 $userid = "";
+$username = "";
+$sessiontimeout = 1800; // Timeout: 30*60 seconds
+$sessionregen = 180; // Session ID regenerate time
 
 /* Check if user has already loggen in */
-if(isset($_SESSION['authname']) && isset($_SESSION['groupid']) && isset($_SESSION['userid'])){
+if(isset($_SESSION['authname']) && isset($_SESSION['groupid']) && isset($_SESSION['userid']))
+{
 	// Get session data
 	setauthname($_SESSION['authname']);
 	// Get userid and usergroup from user and usergroup table
-	$query = "SELECT user.id AS userid, user.login AS username, usergroup.id as usergroupid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"" . getauthname() . "\" AND user.deleted = 0 LIMIT 1";
-	if($result = mysql_query($query, $dbc)){
-		$row = mysql_fetch_array($result);
-		if($row['usergroupid'] == $_SESSION['groupid'] && $row['userid'] == $_SESSION['userid']) {
+	$query = "SELECT user.id AS userid, user.login AS userlogin, user.name AS username, usergroup.id as usergroupid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"" . getauthname() . "\" AND user.deleted = 0 LIMIT 1";
+	if($result = mysqli_query($dbc, $query))
+	{
+		$row = mysqli_fetch_assoc($result);
+		if($row['usergroupid'] == $_SESSION['groupid'] && $row['userid'] == $_SESSION['userid']) 
+		{
 			setgroupid($row['usergroupid']);
 			setuserid($row['userid']);
+			setusername($row['username']);
 			setauth(true);
-		} else {
+			// Check for session timeout
+			if(isset($_SESSION['start']) && (time() - $_SESSION['start'] > $sessiontimeout))
+			{
+    			session_destroy(); 
+    			session_unset();
+			}
+			// Regenerate session ID every ... seconds
+			if(isset($_SESSION['start']) && time() - $_SESSION['start'] > $sessionregen)
+			{
+    			session_regenerate_id(true);
+    			$_SESSION['start'] = time();
+			}
+		} else
+		{
 			// Set user to anonymous and find a groupid and userid if it exists
-			$query = "SELECT user.id AS userid, user.login AS username, usergroup.id as usergroupid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"anonymous\" AND user.deleted = 0 LIMIT 1";
-			if($result = mysql_query($query, $dbc)){
-				$row = mysql_fetch_array($result);
+			$query = "SELECT user.id AS userid, user.login AS userlogin, user.name AS username, usergroup.id as usergroupid FROM user JOIN usergroup ON usergroup.id = user.group_id WHERE user.login = \"anonymous\" AND user.deleted = 0 LIMIT 1";
+			if($result = mysqli_query($dbc, $query))
+			{
+				$row = mysqli_fetch_assoc($result);
 				setauthname("anonymous");
+				setusername($row['username']);
 				setgroupid($row['usergroupid']);
 				setuserid($row['userid']);
 				setauth(true);
-			} else {
+			} else 
+			{
 				setauth(false);
 			}
 		}
 	}
 }
 
-function setauth($bool) {
+function setauth($bool) 
+{
 	global $auth;
 	$auth = $bool;
 }
 
-function getauth() {
+function getauth() 
+{
 	global $auth;
 	return($auth);
 }
 
-function setauthname($name) {
+function setauthname($name) 
+{
 	global $authname;
 	$authname = $name;
 }
 
-function getauthname() {
+function getauthname() 
+{
 	global $authname;
 	return($authname);
 }
 
-function setgroupid($id) {
+function setusername($name) 
+{
+	global $username;
+	$username = $name;
+}
+
+function getusername() 
+{
+	global $username;
+	return($username);
+}
+
+function setgroupid($id) 
+{
 	global $groupid;
 	$groupid = $id;
 }
 
-function getgroupid() {
+function getgroupid() 
+{
 	global $groupid;
 	return($groupid);
 }
 
-function setuserid($id) {
+function setuserid($id) 
+{
 	global $userid;
 	$userid = $id;
 }
 
-function getuserid() {
+function getuserid() 
+{
 	global $userid;
 	return($userid);
 }

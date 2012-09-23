@@ -17,6 +17,9 @@
     along with Object Relations.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Include the settings
+include ('../incl/settings.php');
+
 // Include the functions script:
 include('../incl/functions.php');
 
@@ -28,11 +31,11 @@ include('../auth/auth.php');
 
 // Check permissions:
 include('../perm/perm.php');
-
-	$query = "SELECT object_property_data_binary.data as data, object_property_data_binary.filetype as filetype FROM object_property_data_binary WHERE object_property_data_binary.object_property_id = {$_GET['id']}";
-	if ($result = mysql_query($query, $dbc)) { // Run the query.
-		if ( mysql_num_rows($result) > 0 ) {
-			while ( $row = mysql_fetch_array($result) ) {
+	$objectpropertyid = mysqli_real_escape_string($dbc, $_GET['id']);
+	$query = "SELECT object_property_data_binary.data as data, object_property_data_binary.filetype as filetype FROM object_property_data_binary WHERE object_property_data_binary.object_property_id = $objectpropertyid";
+	if ($result = mysqli_query($dbc, $query)) { // Run the query.
+		if ( mysqli_num_rows($result) > 0 ) {
+			while ( $row = mysqli_fetch_array($result) ) {
 				header("Content-Type: {$row['filetype']}");
 				print $row['data'];
 			}
@@ -40,4 +43,7 @@ include('../perm/perm.php');
 			print "<p class=\"error\">Property data not found</p>\n";
 		}
 	}
+	
+mysqli_close($dbc); // Close the connection.
+
 ?>

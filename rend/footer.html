@@ -18,15 +18,15 @@
 */
 
 if (isset($auth) && $auth) {
-	print "<p class=\"username\">Logged in as '$authname'</p>";
+	print "<p class=\"username\">Logged in as '" . $username . "'</p>";
 } else {
 	print "<p class=\"username\">Not logged in</p>";
 }
 
 ?>
 	</div>
-	<div id="footer">"Object relations" Copyright &copy; 2012 by Bruno Veldeman</div>
-	<script>
+	<div id="footer">"Object relations" Copyright &copy; 2012 Bruno Veldeman</div>
+	<script type="text/javascript">
   		var def = $.Deferred();
 		$(".info").click(def.resolve);
 		setTimeout(def.resolve, 3000);
@@ -34,20 +34,25 @@ if (isset($auth) && $auth) {
     		$(".info").fadeOut("slow");
 		});
   	</script>
-  	<script>
+  	<script type="text/javascript">
   		var def = $.Deferred();
 		$(".error").click(def.resolve);
 		def.done(function() {
     		$(".error").fadeOut("slow");
 		});
-  </script>
-  	<script>
+	</script>
+  	<script type="text/javascript">
   		var def = $.Deferred();
 		$(".alert").click(def.resolve);
 		setTimeout(def.resolve, 5000);
 		def.done(function() {
     		$(".alert").fadeOut("slow");
 		});
-  </script>
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+    	$('textarea').autosize();  
+		});
+	</script>
 </body>
 </html>

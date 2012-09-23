@@ -37,17 +37,27 @@ include('../perm/perm.php');
 	if ($result = mysqli_query($dbc, $query)) { // Run the query.
 		if ( mysqli_num_rows($result) > 0 ) {
 			while ( $row = mysqli_fetch_assoc($result) ) {
-				header("Content-Type: {$row['filetype']}");
-				header("Content-length: {$row['filesize']}");
-  				header("Content-Disposition: attachment; filename={$row['filename']}");
-  				header("Content-Description: PHP Generated Data");
-				print $row['data'];
+				
+				$filelocation = dirname(__FILE__) . "/../" . $row['data'];
+				if ($file = fopen($filelocation, "r"))
+				{
+					header("Content-Type: {$row['filetype']}");
+					header("Content-length: {$row['filesize']}");
+  					header("Content-Disposition: attachment; filename={$row['filename']}");
+  					header("Content-Description: PHP Generated Data");
+					while(!feof($file))
+					{
+						$buff = fread($file, 2048);
+						print $buff;
+					}
+				}
+				fclose($file);
 			}
 		} else {
 			print "<p class=\"error\">Property data not found</p>\n";
 		}
 	}
-	
+		
 mysqli_close($dbc); // Close the connection.
-	
+
 ?>

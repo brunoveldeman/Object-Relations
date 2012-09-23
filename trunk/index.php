@@ -18,7 +18,7 @@
 */
 
 // Include the settings
-include ('settings.php');
+include ('incl/settings.php');
 
 // Include the functions:
 include('incl/functions.php');
@@ -42,10 +42,11 @@ if(getperm('access')){
 	if($command == "logout") {
 		$_SESSION = array();
 		session_destroy();
+		session_unset();
 		print "<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />\n";
 		print "<script>window.setTimeout(function() { window.location.href = 'index.php'; }, 0);</script>\n";
 		setauth(false);
-		mysql_close($dbc); // Close the connection.
+		mysqli_close($dbc); // Close the connection.
 		include('rend/footer.html'); // Include the footer.
 		exit();
 	}
@@ -160,6 +161,33 @@ if(getperm('access')){
 			case 'propertyclassreport':
 				propertyclassreport($dbc);
 				break;
+			case 'issuetypereport':
+				issuetypereport($dbc);
+				break;
+			case 'listissues':
+				listissues($dbc);
+				break;
+			case 'addissue':
+				addissue($dbc);
+				break;
+			case 'viewissue':
+				viewissue($dbc);
+				break;
+			case 'editissue':
+				editissue($dbc);
+				break;
+			case 'addobjectissue':
+				addobjectissue($dbc);
+				break;
+			case 'deleteobjectissue':
+				deleteobjectissue($dbc);
+				break;
+			case 'updateissuemsg':
+				updateissuemsg($dbc);
+				break;
+			case 'addissuemsg':
+				addissuemsg($dbc);
+				break;
 			case 'listusers':
 				listusers($dbc);
 				break;
@@ -190,18 +218,12 @@ if(getperm('access')){
 		print "<p class=\"error\">Access denied</p>";
 	}
 } else {
+	print "<div style=\"float:left;text-align:center;width:100%\"><a href=\"login.php\">Click here to log in</a></div>\n";
 	print "<div style=\"margin: 0px auto;background-image: url(images/logo.svg); height: 350px; width: 500px;\"></div>\n";
 	print "<script>window.setTimeout(function() { window.location.href = 'login.php'; }, 0);</script>\n";
 }
 
-//	print "\n<hr \>**************** BEGIN TEST AREA ****************<br \><br \>\n";
-	
-	
-//	print "\n<br \><br \>***************** END TEST AREA *****************<br \>\n";
-	
-
-
-mysql_close($dbc); // Close the connection.
+mysqli_close($dbc); // Close the connection.
 
 include('rend/footer.html'); // Include the footer.
 ?>

@@ -18,9 +18,11 @@
     along with Object Relations.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Get user permissions from permissions table
+
 $query = "SELECT usergroup_permissions.value AS usergrouppermissionsvalue, permissions.name AS permissionsname FROM usergroup_permissions JOIN permissions ON permissions.id = usergroup_permissions.permission_id WHERE  usergroup_permissions.group_id = " . getgroupid();
-if ($result = mysql_query($query, $dbc)) { // Run the query.
-	while ($row = mysql_fetch_array($result)) {
+if ($result = mysqli_query( $dbc, $query )) { // Run the query.
+	while ($row = mysqli_fetch_assoc($result)) {
 		$perm[$row['permissionsname']] = $row['usergrouppermissionsvalue'];
 	}
 }
@@ -31,14 +33,23 @@ if(isset($perm['editobjectproperty'])){
 	if($perm['editobjectproperty']){
 		$perm['updateobjectproperty'] = true;
 		$perm['storeobjectproperty'] = true;
+		$perm['deleteobjectproperty'] = true;
 	}
 }
+// Objects
+if(isset($perm['addobject'])){
+	if($perm['addobject']){
+		$perm['addmobject'] = true;
+	}
+}
+
 // Reports
 if(isset($perm['reports'])){
 	if($perm['reports']){
 		$perm['typereport'] = true;
 		$perm['propertyreport'] = true;
 		$perm['propertyclassreport'] = true;
+		$perm['issuetypereport'] = true;
 	}
 }
 // User management
@@ -58,67 +69,36 @@ if(isset($perm['access'])){
 		$perm['aboutpage'] = true;
 	}
 }
-// Get user permissions from permissions table
-/* The permission array*/
+// Issues
+if(isset($perm['editissue'])){
+	if($perm['editissue']){
+		$perm['addissuemsg'] = true;
+		$perm['editissuemsg'] = true;
+		$perm['addobjectissue'] = true;
+		$perm['deleteobjectissue'] = true;
+	}
+}
+// Issue updates
+if(isset($perm['addissuemsg'])){
+	if($perm['addissuemsg']){
+		$perm['addobjectissue'] = true;
+		$perm['deleteobjectissue'] = true;
+	}
+}
 
-/*$perm = array(
-	"access" => true,
-    "listobjects" => true,
-	"viewobject" => true,
-    "addobject" => true,
-    "editobject" => true,
-    "deleteobject" => false, // Not implemented
-	"listtypes" => true,
-    "viewtype" => true,
-    "addtype" => true,
-    "edittype" => true,
-    "deletetype" => false, // Not implemented
-    "listproperties" => true,
-    "viewproperty" => true,
-    "addproperty" => true,
-    "editproperty" => true,
-    "deleteproperty" => false, // Not implemented
-    "listrelations" => true,
-    "viewrelation" => true,
-    "addrelation" => true,
-    "editrelation" => true,
-    "deleterelation" => false, // Not implemented
-    "viewobjecttype" => true,
-    "editobjecttype" => true,
-    "viewobjectproperty" => true,
-    "addobjectproperty" => true,
-    "editobjectproperty" => true,
-    "deleteobjectproperty" => false,
-    "viewobjectrelation" => true,
-    "addobjectrelation" => true,
-    "editobjectrelation" => true,
-    "deleteobjectrelation" => false,
-    "reports" => true,
-    "usermanagement" => true,
-    "listusers" => true,
-    "edituser" => true,
-    "adduser" => true,
-    "listgroups" => true,
-    "editgroup" => true,
-    "addgroup" => true,
-    "search" => true,
-);*/
 
 function getperm($permname) {
 	if ($permname <> "") {
 		global $perm;
-		return($perm[$permname]);
+		if(isset($perm[$permname])) {
+			return($perm[$permname]);
+		} else {
+			return(false);
+		}
 	} else {
 		return(true);
 	}
 }
 
-/*
-if ( $perm['deleteobject'] ) {
-	print "OK";
-} else {
-	print "NOT OK";
-}
-*/
 
 ?>

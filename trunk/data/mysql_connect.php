@@ -1,10 +1,30 @@
-<?php 
+<?php
 /* Database connection. */
+/* Legal Stuff
+
+	This file is part of Object relations.
+
+    Object Relations is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Object relations is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Object Relations.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 // Connect:
-$dbc = mysql_connect('localhost', 'root', '');
- 
+$dbc = mysqli_connect(getdbserver(), getdbusername(), getdbuserpassword(), getdbname() );
+
 // Select:
-mysql_select_db('or', $dbc);
+if(!$dbc)
+{
+	debugprint( '<p id="clickme" class="error">' . mysqli_error($dbc). "<br />Connection to database failed " . '</p>');
+};
 
 ?>
